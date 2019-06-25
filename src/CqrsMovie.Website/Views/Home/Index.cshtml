@@ -1,0 +1,28 @@
+﻿@{
+  ViewData["Title"] = "Home Page";
+}
+
+@if (!string.IsNullOrEmpty(ViewBag.Message))
+{
+  <p>@ViewBag.Message</p>
+}
+<div class="row">
+  <div class="col-md-3">
+    <h2>Create daily programming</h2>
+    <form asp-action="CreateDailyProgramming" asp-controller="Home">
+      <button type="submit">Create</button>
+    </form>
+  </div>
+  <div class="col-md-3">
+    <h2>Book seats</h2>
+    <form asp-action="BookSeats" asp-controller="Home">
+      <button type="submit">Book</button>
+    </form>
+  </div>
+  <div class="col-md-3">
+    <h2>Reserve Seats</h2>
+    <form asp-action="ReserveSeats" asp-controller="Home">
+      <button type="submit">Reserve</button>
+    </form>
+  </div>
+</div>

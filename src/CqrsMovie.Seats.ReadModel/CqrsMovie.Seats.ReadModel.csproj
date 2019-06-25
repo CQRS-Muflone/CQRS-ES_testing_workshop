@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Abstracts\**" />
+    <EmbeddedResource Remove="Abstracts\**" />
+    <None Remove="Abstracts\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CqrsMovie.Core\CqrsMovie.Core.csproj" />
+    <ProjectReference Include="..\CqrsMovie.Messages\CqrsMovie.Messages.csproj" />
+    <ProjectReference Include="..\CqrsMovie.SharedKernel\CqrsMovie.SharedKernel.csproj" />
+  </ItemGroup>
+
+</Project>
