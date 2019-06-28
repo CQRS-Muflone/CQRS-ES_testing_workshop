@@ -10,7 +10,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.PlatformAbstractions;
 using Muflone.Eventstore;
 using Muflone.MassTransit.RabbitMQ;
-using Muflone.MassTransit.RabbitMQ.Dependecies;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace CqrsMovie.Seats.API

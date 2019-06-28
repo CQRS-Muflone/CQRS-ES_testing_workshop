@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Muflone.MassTransit.RabbitMQ;
-using Muflone.MassTransit.RabbitMQ.Dependecies;
 
 namespace CqrsMovie.Website
 {
