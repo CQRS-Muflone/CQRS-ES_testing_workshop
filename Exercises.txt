@@ -1,0 +1,55 @@
+----------------------------------------
+Linee guida
+----------------------------------------
+Riportiamo un breve riassunto di quanto spiegato durante il workshop per aiutarti ad avere una lista dei passi da seguire:
+* l'applicazione lancia comandi per far scatenare le regole di business nel dominio
+* un CommandHandler risponde la comando, istanzia l'"aggregate root" interessato ed esegue i metodi necessari dell'aggregato
+* l'aggregate fa i suoi controlli e chiama RaiseEvent per scatenare uno o più eventi come risultato.
+* nel tuo aggregato deve esserci il metodo void Apply(IlMioEvento @event) per rispondere all'evento e valorizzare le proprietà del dominio necessarie
+* uno o più EventHandler rispondo all'evento emesso e aggiornano i loro readmodel
+
+Nella solution folder "shared" c'è il progetto CqrsMovie.Messages in cui vanno messi tutti i comandi ed eventi
+
+Per quanto concerne la fase di test, hai a disposizione la classe CommandSpecification del pacchetto nuget Muflone.SpecificationTests che ti da già tutti i metodi base, quali:
+ Given()
+ When()
+ OnHandler()
+ Expect()
+
+
+----------------------------------------
+Esercizio 1 - Reserve Seat (50 minuti)
+----------------------------------------
+Quando un utente del nostro sito inizia il processo di acquisto, il sistema blocca per 15 minuti i posti selezionati.
+In questo esercizio dovrai scrivere il test ed il relativo codice per bloccare temporaneamente i posti selezionati dall'utente. (Comando ReserveSeats)
+Come spiegato, ricorda che i comandi sono imperativi, mentre gli eventi sono al passato in quanto è qualcosa che è successo.
+Ricorda inoltre, che il test parte da una lista di eventi (Given()) che rappresentano lo stato iniziale dell'aggregato, che è il comando (When() ed OnHandler()) a far scatenare il tutto ed, infine, 
+che devi specificare qual è o quali sono gli eventi che ci aspettiamo siano creati dall'aggregato.
+Si è deciso che l'aggregato espone la lista dei posti composti da numero, riga e stato. Lo stato non viene passato nel comando in quanto superfluo, è il comando stesso che ci dice cosa fare con 
+quei posti, pertanto lo stato sarà il nostro aggregato ad impostarlo, proprio come nel comando che abbiamo visto insieme.
+
+Per incrociare i posti liberi con quelli occupati temporaneamente, puoi anche usare il comando Intersect di Linq oltre al classico for/foreach
+    var seatsToCheck = seats.Intersect(seatsToReserve.ToEntity(SeatState.Free));
+
+La classe CommandSpecification espone già un repository con GetById collegato ad un event store in memoria, pertanto non dovrai fare nulla se non necessiti di estendere/mocakare le sue funzionalità.
+
+
+----------------------------------------
+Esercizio 2 - Reserve Seat Exception (40 minuti)
+----------------------------------------
+Se per qualche motivo ci dovesse arrivare un comando che cerca di riservare dei posti già occupati, dovremo emettere un'eccezione e non generare alcun evento.
+In realtà potremmo anche emettere un evento che avvisa che non si sono potuti occupare i posti, se invece la gestione dei nostri comandi fosse sincrona l'eccezione sarebbe sufficiente.
+Lo scopo dell'esercizio però è solo testare un'eccezione pertanto affronteremo questi discorsi davanti ad una birra, ma non adesso :)
+In questo esercizio dovrai scrivere un test che verifichi non vengano emessi eventi, ma bensì un eccezione. 
+Ricorda quindi di creare una situazione (Given()) ed un comando (When() ed OnHanlder()) che scatenino l'eccezione da parte dell'aggregato.
+La classe CommandSpecification espone una proprietà "ExpectedException" che non devi far altro che valorizzare nel costruttore del tuo test.
+per esempio: ExpectedException = new Exception("la mia eccezione");
+
+
+
+----------------------------------------
+Esercizio 3 - Book seat (30 minuti)
+----------------------------------------
+Quando l'utente termina il pagamento dei posti che desidera, il nostro sistema dovrà trasformare lo stato dei posti "reserved" in "booked".
+Come spiegato ricorda che i comandi sono imperativi, mentre gli eventi sono al passato in quanto è qualcosa che è successo.
+In questo esercizio dovrai scrivere tutta la gestione scatenata dal comando "BookSeats"
