@@ -20,7 +20,7 @@ namespace CqrsMovie.Website
 
     public void ConfigureServices(IServiceCollection services)
     {
-      services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+      services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
       services.AddMongoDb(Configuration.GetConnectionString("MongoDB"));
       services.Configure<ServiceBusOptions>(Configuration.GetSection("MassTransit:RabbitMQ"));
       var serviceBusOptions = new ServiceBusOptions();

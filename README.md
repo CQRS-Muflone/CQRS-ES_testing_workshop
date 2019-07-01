@@ -5,8 +5,8 @@ The scope is to show a way to test events in a CQRS with event sourcing applicat
 # This is the exercise branch *
 
 ## Prerequisites
-* [Visual Studio 2017](https://visualstudio.microsoft.com/downloads/) or [Visual Studio Code](https://code.visualstudio.com/)
-* [.NET Core 2.1](https://www.microsoft.com/net/download)
+* [Visual Studio](https://visualstudio.microsoft.com/downloads/) or [Visual Studio Code](https://code.visualstudio.com/)
+* [.NET Core 2.2](https://www.microsoft.com/net/download)
 * [RabbitMQ](https://www.rabbitmq.com "RabbitMQ's Homepage")
 * [MongoDB](https://www.mongodb.com "MongoDB's Homepage")
 * [Event Store](https://eventstore.org "Event store's Homepage")
