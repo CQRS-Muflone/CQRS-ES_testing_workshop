@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using CqrsMovie.Core.Enums;
-using CqrsMovie.SharedKernel.Domain;
+using Muflone.Core;
 
 namespace CqrsMovie.Seats.Domain.Entities
 {
