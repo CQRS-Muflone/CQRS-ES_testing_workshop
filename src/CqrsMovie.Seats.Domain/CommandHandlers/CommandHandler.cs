@@ -18,15 +18,15 @@ namespace CqrsMovie.Seats.Domain.CommandHandlers
       Logger = loggerFactory.CreateLogger(GetType());
     }
 
-    protected async Task<TAggregate> Get<TAggregate>(IDomainId id) where TAggregate : AggregateBase
+    protected async Task<TAggregate> Get<TAggregate>(IDomainId id) where TAggregate : AggregateRoot
     {
-      var aggregate = await Repository.GetById<TAggregate>(id.Value);
+      var aggregate = await Repository.GetById<TAggregate>(id);
       if (aggregate == null)
         throw new Exception($"{typeof(TAggregate).Name} not found");
       return aggregate;
     }
 
-    protected async Task Save<TAggregate>(TAggregate aggregate) where TAggregate : AggregateBase
+    protected async Task Save<TAggregate>(TAggregate aggregate) where TAggregate : AggregateRoot
     {
       await Repository.Save(aggregate, Guid.NewGuid());
     }

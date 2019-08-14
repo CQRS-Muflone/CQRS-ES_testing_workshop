@@ -1,11 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Muflone" Version="0.9.1" />
+    <PackageReference Include="Muflone" Version="0.9.3" />
   </ItemGroup>
 
   <ItemGroup>

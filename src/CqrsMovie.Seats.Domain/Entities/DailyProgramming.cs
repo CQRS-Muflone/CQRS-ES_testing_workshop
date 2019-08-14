@@ -5,6 +5,7 @@ using CqrsMovie.Core.Enums;
 using CqrsMovie.Messages.Events.Seat;
 using CqrsMovie.SharedKernel.Domain;
 using CqrsMovie.SharedKernel.Domain.Ids;
+using Muflone.Core;
 
 namespace CqrsMovie.Seats.Domain.Entities
 {

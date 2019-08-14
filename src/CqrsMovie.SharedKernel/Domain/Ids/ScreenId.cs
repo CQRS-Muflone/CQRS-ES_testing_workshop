@@ -1,4 +1,5 @@
 ﻿using System;
+using Muflone.Core;
 
 namespace CqrsMovie.SharedKernel.Domain.Ids
 {
