@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Muflone.MassTransit.RabbitMQ;
 
 namespace CqrsMovie.Website
@@ -19,8 +20,8 @@ namespace CqrsMovie.Website
     public IConfiguration Configuration { get; }
 
     public void ConfigureServices(IServiceCollection services)
-    {
-      services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+    { 
+      services.AddMvc(option => option.EnableEndpointRouting = false);
       services.AddMongoDb(Configuration.GetConnectionString("MongoDB"));
       services.Configure<ServiceBusOptions>(Configuration.GetSection("MassTransit:RabbitMQ"));
       var serviceBusOptions = new ServiceBusOptions();
@@ -33,16 +34,22 @@ namespace CqrsMovie.Website
       });
     }
 
-    public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+    public void Configure(IApplicationBuilder app, IHostEnvironment env)
     {
       if (env.IsDevelopment())
         app.UseDeveloperExceptionPage();
-
       else
         app.UseExceptionHandler("/Home/Error");
 
       app.UseStaticFiles();
-      app.UseMvc(routes => { routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}"); });
+      app.UseRouting();
+      app.UseEndpoints(endpoints =>
+      {
+          endpoints.MapControllerRoute(
+              "default",
+              "{controller=Home}/{action=Index}/{id?}");
+          endpoints.MapRazorPages();
+      });
     }
   }
 }
