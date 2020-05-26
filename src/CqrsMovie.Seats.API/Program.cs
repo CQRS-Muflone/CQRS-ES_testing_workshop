@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using Serilog;
 
 namespace CqrsMovie.Seats.API
@@ -22,14 +22,11 @@ namespace CqrsMovie.Seats.API
         .ReadFrom.Configuration(Configuration)
         .Enrich.FromLogContext()
         .CreateLogger();
+
       try
       {
         Log.Information("Starting web host");
-        WebHost.CreateDefaultBuilder(args)
-          .UseStartup<Startup>()
-          .UseSerilog()
-          .Build()
-          .Run();
+        CreateHostBuilder(args).Build().Run();
         return 0;
       }
       catch (Exception ex)
@@ -43,5 +40,11 @@ namespace CqrsMovie.Seats.API
       }
     }
 
-  }
+    private static IHostBuilder CreateHostBuilder(string[] args) =>
+        Host.CreateDefaultBuilder(args)
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseStartup<Startup>();
+            });
+    }
 }
