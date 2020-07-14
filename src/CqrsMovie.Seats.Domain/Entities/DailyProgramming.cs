@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using CqrsMovie.Core.Enums;
 using CqrsMovie.Messages.Events.Seat;
-using CqrsMovie.SharedKernel.Domain;
 using CqrsMovie.SharedKernel.Domain.Ids;
 using Muflone.Core;
 
