@@ -37,19 +37,7 @@ namespace CqrsMovie.Website.Controllers
     [HttpPost]
     public async Task<IActionResult> CreateDailyProgramming()
     {
-      //The correct roundtrip would be to load the screen with its seats (I would avoid if possible to lookup for these kind of values in the command handlers)
-      var seats = new List<Seat>();
-      for (var i = 1; i <= 5; i++)
-        for (var j = 0; j < 5; j++)
-          seats.Add(new Seat { Number = i, Row = ((char)(65 + j)).ToString() });
-      //To improve would be better to create classes for Ids like MovieId, ScreenId, etc.
-      await serviceBus.Send(new CreateDailyProgramming(new DailyProgrammingId(DailyProgramming1), new MovieId(Guid.NewGuid()), new ScreenId(Guid.NewGuid()), DateTime.Today, seats, "The Avengers", "Screen 02"));
-
-      seats = new List<Seat>();
-      for (var i = 1; i <= 7; i++)
-        for (var j = 0; j < 4; j++)
-          seats.Add(new Seat { Number = i, Row = ((char)(65 + j)).ToString() });
-      await serviceBus.Send(new CreateDailyProgramming(new DailyProgrammingId(DailyProgramming2), new MovieId(Guid.NewGuid()), new ScreenId(Guid.NewGuid()), DateTime.Today, seats, "Attila flagello di Dio", "Screen 01"));
+     //Write create daily programming
 
       ViewData["Message"] = "CreateDailyProgramming commands sent";
       return RedirectToAction("Index");

@@ -8,44 +8,46 @@ using Muflone.MassTransit.RabbitMQ;
 
 namespace CqrsMovie.Website
 {
-  public class Startup
-  {
-    public Startup(IConfiguration configuration)
-    {
-      Configuration = configuration;
-    }
+	public class Startup
+	{
+		public Startup(IConfiguration configuration)
+		{
+			Configuration = configuration;
+		}
 
-    public IConfiguration Configuration { get; }
+		public IConfiguration Configuration { get; }
 
-    public void ConfigureServices(IServiceCollection services)
-    {
-      services.AddMvc(option => option.EnableEndpointRouting = false);
-            services.AddMongoDb(Configuration.GetConnectionString("MongoDB"));
-      services.Configure<ServiceBusOptions>(Configuration.GetSection("MassTransit:RabbitMQ"));
-      var serviceBusOptions = new ServiceBusOptions();
-      Configuration.GetSection("MassTransit:RabbitMQ").Bind(serviceBusOptions);
-      services.AddMufloneMassTransitWithRabbitMQ(serviceBusOptions, x =>
-      {
-        x.AddConsumer<DailyProgrammingCreatedConsumer>();
-      });
-    }
+		public void ConfigureServices(IServiceCollection services)
+		{
+			services.AddMvc(option => option.EnableEndpointRouting = false);
+			services.AddMongoDb(Configuration.GetConnectionString("MongoDB"));
 
-    public void Configure(IApplicationBuilder app, IHostEnvironment env)
-    {
-      if (env.IsDevelopment())
-        app.UseDeveloperExceptionPage();
-      else
-        app.UseExceptionHandler("/Home/Error");
+			//Il codice nel progetto infrastructure non è commentato in quanto c'è solo da capire velocmente l'EventStoreRepository
+			//services.Configure<ServiceBusOptions>(Configuration.GetSection("MassTransit:RabbitMQ"));
+			//var serviceBusOptions = new ServiceBusOptions();
+			//Configuration.GetSection("MassTransit:RabbitMQ").Bind(serviceBusOptions);
+			//services.AddMufloneMassTransitWithRabbitMQ(serviceBusOptions, x =>
+			//{
+			//	x.AddConsumer<DailyProgrammingCreatedConsumer>();
+			//});
+		}
 
-      app.UseStaticFiles();
-      app.UseRouting();
-            app.UseEndpoints(endpoints =>
-      {
-          endpoints.MapControllerRoute(
-              "default",
-              "{controller=Home}/{action=Index}/{id?}");
-          endpoints.MapRazorPages();
-      });
-    }
-  }
+		public void Configure(IApplicationBuilder app, IHostEnvironment env)
+		{
+			if (env.IsDevelopment())
+				app.UseDeveloperExceptionPage();
+			else
+				app.UseExceptionHandler("/Home/Error");
+
+			app.UseStaticFiles();
+			app.UseRouting();
+			app.UseEndpoints(endpoints =>
+{
+	endpoints.MapControllerRoute(
+						"default",
+						"{controller=Home}/{action=Index}/{id?}");
+	endpoints.MapRazorPages();
+});
+		}
+	}
 }

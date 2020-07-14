@@ -8,4 +8,8 @@
     <PackageReference Include="Muflone" Version="0.9.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Domain\Ids\" />
+  </ItemGroup>
+
 </Project>

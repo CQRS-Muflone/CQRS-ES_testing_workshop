@@ -14,7 +14,7 @@ namespace CqrsMovie.Seats.Infrastructure.MassTransit.Events
     {
     }
 
-    protected override IDomainEventHandler<DailyProgrammingCreated> Handler => new DailyProgrammingCreatedDomainDomainEventHandler(Persister, LoggerFactory);
+    protected override IDomainEventHandler<DailyProgrammingCreated> Handler => new DailyProgrammingCreatedEventHandler(Persister, LoggerFactory);
     public override async Task Consume(ConsumeContext<DailyProgrammingCreated> context)
     {
       using (var handler = Handler)

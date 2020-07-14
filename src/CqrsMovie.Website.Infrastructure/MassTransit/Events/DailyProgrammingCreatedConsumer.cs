@@ -21,7 +21,6 @@ namespace CqrsMovie.Website.Infrastructure.MassTransit.Events
     {
       using (var handler = Handler)
         await handler.Handle(context.Message);
-
     }
   }
 }

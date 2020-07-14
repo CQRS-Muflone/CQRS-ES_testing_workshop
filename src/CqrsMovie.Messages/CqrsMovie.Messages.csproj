@@ -13,4 +13,9 @@
     <ProjectReference Include="..\CqrsMovie.SharedKernel\CqrsMovie.SharedKernel.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Commands\Seat\" />
+    <Folder Include="Events\Seat\" />
+  </ItemGroup>
+
 </Project>
