@@ -3,6 +3,7 @@ using System.IO;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using Serilog;
 
 namespace CqrsMovie.Website
@@ -25,11 +26,18 @@ namespace CqrsMovie.Website
       try
       {
         Log.Information("Starting web host");
-        WebHost.CreateDefaultBuilder(args)
-          .UseStartup<Startup>()
-          .UseSerilog()
-          .Build()
-          .Run();
+        Host.CreateDefaultBuilder(args)
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseStartup<Startup>();
+            })
+            .Build()
+            .Run();
+
+          //.UseStartup<Startup>()
+          //.UseSerilog()
+          //.Build()
+          //.Run();
         return 0;
       }
       catch (Exception ex)

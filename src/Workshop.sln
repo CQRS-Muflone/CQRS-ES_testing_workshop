@@ -41,6 +41,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{25D49246
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CqrsMovie.Messages", "CqrsMovie.Messages\CqrsMovie.Messages.csproj", "{8B263A3F-943C-4446-AF40-FFFDDC7B65E0}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MufloneBank", "MufloneBank", "{0C346B4B-130D-45E3-AF2D-CD278ED76928}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CqrsMovie.MufloneBank", "CqrsMovie.MufloneBank\CqrsMovie.MufloneBank.csproj", "{381F236D-5A35-4E25-8361-7400F5C4FB4E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -103,6 +107,10 @@ Global
 		{8B263A3F-943C-4446-AF40-FFFDDC7B65E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8B263A3F-943C-4446-AF40-FFFDDC7B65E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8B263A3F-943C-4446-AF40-FFFDDC7B65E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{381F236D-5A35-4E25-8361-7400F5C4FB4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{381F236D-5A35-4E25-8361-7400F5C4FB4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{381F236D-5A35-4E25-8361-7400F5C4FB4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{381F236D-5A35-4E25-8361-7400F5C4FB4E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -123,6 +131,7 @@ Global
 		{EF03D4CA-9C66-4862-A6D5-A19C24D3D3BD} = {25D49246-2CD2-4FFE-BDC9-2931CB7A3E0A}
 		{25D49246-2CD2-4FFE-BDC9-2931CB7A3E0A} = {9E147D48-8096-4FD3-B6E9-F6999210F079}
 		{8B263A3F-943C-4446-AF40-FFFDDC7B65E0} = {F6CDFAA4-226E-4E2D-ADF6-9F8B0419C737}
+		{381F236D-5A35-4E25-8361-7400F5C4FB4E} = {0C346B4B-130D-45E3-AF2D-CD278ED76928}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {596E135C-5B9F-40DE-A6E4-E6F879B9D328}
