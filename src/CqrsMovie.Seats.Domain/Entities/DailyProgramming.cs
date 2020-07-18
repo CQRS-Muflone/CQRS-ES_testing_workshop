@@ -68,7 +68,10 @@ namespace CqrsMovie.Seats.Domain.Entities
       // Chk for seats availability
       var seatsToChk = seats.Where(seat => seatsToReserve.Any(book => book.ToEntity(SeatState.Free).Equals(seat)));
       if (seatsToChk.Count() != seatsToReserve.Count())
-        throw new Exception("Unable to reserve seats. Already taken");
+      {
+          RaiseEvent(new SeatsAlreadyTaken(aggregateId, seatsToReserve));
+          return;
+      }
 
       RaiseEvent(new SeatsReserved(aggregateId, seatsToReserve));
     }
@@ -82,6 +85,9 @@ namespace CqrsMovie.Seats.Domain.Entities
         seats.Add(new Seat(seat.Row, seat.Number, SeatState.Reserved));
       }
     }
+
+    private void Apply(SeatsAlreadyTaken @event)
+    {}
     #endregion
   }
 }

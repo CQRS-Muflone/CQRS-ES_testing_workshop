@@ -12,6 +12,7 @@ using Muflone.SpecificationTests;
 
 namespace CqrsMovie.Seats.Domain.Tests.Entities
 {
+  [Obsolete]
   public class ReserveSeats_Fail : CommandSpecification<ReserveSeats>
   {
     private readonly DailyProgrammingId aggregateId = new DailyProgrammingId(Guid.NewGuid());
@@ -74,7 +75,7 @@ namespace CqrsMovie.Seats.Domain.Tests.Entities
 
     protected override IEnumerable<DomainEvent> Expect()
     {
-      return new List<DomainEvent>();
+        yield break;
     }
   }
 }
