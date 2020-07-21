@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Muflone" Version="0.9.4" />
+    <PackageReference Include="Muflone" Version="1.0.1" />
   </ItemGroup>
 
   <ItemGroup>
