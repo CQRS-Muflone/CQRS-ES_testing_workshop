@@ -9,7 +9,7 @@ The scope is to show a way to test events in a CQRS with event sourcing applicat
 * [.NET Core 3.1](https://dotnet.microsoft.com/download/dotnet-core/3.1)
 * [RabbitMQ](https://www.rabbitmq.com "RabbitMQ's Homepage")
 * [MongoDB](https://www.mongodb.com "MongoDB's Homepage")
-* [Event Store](https://eventstore.com/downloads/ "Event store's Homepage" Use EventStoreDB 5.0.8)
+* [Event Store](https://eventstore.com/downloads/ "Event store's Homepage") Download EventStoreDB 5.0.8
 
 ## Notes
 Be sure to set the solution to run multiple project and enable CqrsMovie.Seats.API and CqrsMovie.Website
