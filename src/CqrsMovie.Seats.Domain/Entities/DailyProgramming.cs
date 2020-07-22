@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using CqrsMovie.Core.Enums;
 using CqrsMovie.Messages.Events.Seat;
-using CqrsMovie.SharedKernel.Domain;
 using CqrsMovie.SharedKernel.Domain.Ids;
 using Muflone.Core;
 
@@ -22,7 +21,14 @@ namespace CqrsMovie.Seats.Domain.Entities
     protected DailyProgramming()
     { }
 
-    public DailyProgramming(DailyProgrammingId aggregateId, MovieId movieId, ScreenId screenId, DateTime date, IEnumerable<Messages.Dtos.Seat> freeSeats, string movieTitle, string screenName)
+    public static DailyProgramming CreateDailyProgramming(DailyProgrammingId aggregateId, MovieId movieId,
+        ScreenId screenId, DateTime date, IEnumerable<Messages.Dtos.Seat> freeSeats, string movieTitle,
+        string screenName)
+    {
+        return new DailyProgramming(aggregateId, movieId, screenId, date, freeSeats, movieTitle, screenName);
+    }
+
+    private DailyProgramming(DailyProgrammingId aggregateId, MovieId movieId, ScreenId screenId, DateTime date, IEnumerable<Messages.Dtos.Seat> freeSeats, string movieTitle, string screenName)
     {
       //Null checks etc. ....
 
