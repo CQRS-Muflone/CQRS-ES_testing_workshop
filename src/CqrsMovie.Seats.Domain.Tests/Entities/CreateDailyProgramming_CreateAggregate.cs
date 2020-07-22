@@ -24,7 +24,7 @@ namespace CqrsMovie.Seats.Domain.Tests.Entities
 
     public CreateDailyProgramming_CreateAggregate()
     {
-      seats = new List<Seat>() { new Seat() { Number = 1, Row = "A" } };
+      seats = new List<Seat> { new Seat { Number = 1, Row = "A" } };
     }
 
     protected override IEnumerable<DomainEvent> Given()
