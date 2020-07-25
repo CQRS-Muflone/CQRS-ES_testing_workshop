@@ -14,14 +14,14 @@ namespace CqrsMovie.Seats.Infrastructure.MassTransit.Sagas
         {
         }
 
-        protected override ISagaEventHandler<SeatsBooked> Handler { get; }
+        protected override ISagaEventHandler<SeatsBooked> Handler => new BookSeatsSaga(ServiceBus, Repository);
 
         public override async Task Consume(ConsumeContext<SeatsBooked> context)
         {
             if (context.CorrelationId != null)
             {
+                // ... recupero stato della Saga
                 var sagaState = this.Repository.GetById<BookSeatsSaga.SagaBookedState>(context.CorrelationId.Value);
-
             }
 
             using (var handler = this.Handler)

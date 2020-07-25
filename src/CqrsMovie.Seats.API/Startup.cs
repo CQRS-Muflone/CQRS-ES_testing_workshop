@@ -47,7 +47,6 @@ namespace CqrsMovie.Seats.API
 				x.AddConsumer<ReserveSeatsConsumer>();
 				x.AddConsumer<SeatsReservedConsumer>();
 
-                //x.AddConsumer<StartBookSeatsSagaCommandConsumer>();
                 x.AddConsumer<StartBookSeatsSagaConsumer>();
                 x.AddConsumer<SeatsBookedSagaConsumer>();
                 x.AddConsumer<SeatsAlreadyTakenSagaConsumer>();

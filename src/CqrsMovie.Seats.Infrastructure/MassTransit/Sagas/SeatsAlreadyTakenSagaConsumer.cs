@@ -15,19 +15,13 @@ namespace CqrsMovie.Seats.Infrastructure.MassTransit.Sagas
         {
         }
 
-        protected override ISagaEventHandler<SeatsAlreadyTaken> Handler { get; }
-        public override Task Consume(ConsumeContext<SeatsAlreadyTaken> context)
+        protected override ISagaEventHandler<SeatsAlreadyTaken> Handler => new BookSeatsSaga(this.ServiceBus, this.Repository);
+        public override async Task Consume(ConsumeContext<SeatsAlreadyTaken> context)
         {
-            if (context.CorrelationId != null)
+            using (var handle = Handler)
             {
-                var sagaState = this.Repository.GetById<BookSeatsSaga.SagaBookedState>(context.CorrelationId.Value);
-
+                await handle.Handle(context.Message);
             }
-
-            return Task.CompletedTask;
-
-            //using (var handler = this.Handler)
-            //    await handler.Handle(context.Message);
         }
     }
 }
