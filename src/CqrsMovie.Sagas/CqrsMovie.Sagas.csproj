@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Muflone.Saga" Version="1.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CqrsMovie.Messages\CqrsMovie.Messages.csproj" />
+    <ProjectReference Include="..\CqrsMovie.SharedKernel\CqrsMovie.SharedKernel.csproj" />
+  </ItemGroup>
+
+</Project>

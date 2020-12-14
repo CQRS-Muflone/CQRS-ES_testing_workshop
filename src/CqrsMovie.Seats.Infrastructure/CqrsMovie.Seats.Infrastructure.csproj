@@ -8,12 +8,12 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.6" />
     <PackageReference Include="MongoDB.Driver" Version="2.10.4" />
     <PackageReference Include="Muflone.EventStore" Version="1.0.0" />
+    <PackageReference Include="Muflone.MassTransit.RabbitMQ" Version="1.0.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\CqrsMovie.Seats.Domain\CqrsMovie.Seats.Domain.csproj" />
     <ProjectReference Include="..\CqrsMovie.Seats.ReadModel\CqrsMovie.Seats.ReadModel.csproj" />
-    <ProjectReference Include="..\Muflone.MassTransit.RabbitMQ\src\Muflone.MassTransit.RabbitMQ\Muflone.MassTransit.RabbitMQ.csproj" />
   </ItemGroup>
 
 </Project>

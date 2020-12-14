@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace CqrsMovie.Seats.API.Sagas.Controllers
+namespace CqrsMovie.Sagas.API.Controllers
 {
   public abstract class BaseController: Controller
   {

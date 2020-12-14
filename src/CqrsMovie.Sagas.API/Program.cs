@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 
-namespace CqrsMovie.Seats.API.Sagas
+namespace CqrsMovie.Sagas.API
 {
     public class Program
     {

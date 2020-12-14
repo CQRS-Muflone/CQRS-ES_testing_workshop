@@ -1,14 +1,10 @@
-﻿using CqrsMovie.Seats.Infrastructure.MassTransit.Commands;
-using CqrsMovie.Seats.Infrastructure.MassTransit.Sagas;
-using CqrsMovie.Seats.Infrastructure.Persistence;
-using CqrsMovie.Website.Infrastructure.MassTransit.Events;
+﻿using CqrsMovie.Website.Infrastructure.MassTransit.Events;
 using CqrsMovie.Website.Infrastructure.MongoDb;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Muflone.MassTransit.RabbitMQ;
-using Muflone.Saga.Persistence;
 
 namespace CqrsMovie.Website
 {

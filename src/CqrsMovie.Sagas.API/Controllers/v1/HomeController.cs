@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace CqrsMovie.Seats.API.Sagas.Controllers.v1
+namespace CqrsMovie.Sagas.API.Controllers.v1
 {
   public class HomeController : BaseController
   {

@@ -2,9 +2,9 @@
 using Muflone.Saga.Persistence;
 using Newtonsoft.Json;
 
-namespace CqrsMovie.Seats.Sagas.Persistence
+namespace CqrsMovie.Sagas.Infrastructure.Persistence
 {
-	public class Serializer: ISerializer
+	public class Serializer : ISerializer
 	{
 		public Task<T> Deserialize<T>(string serializedData) where T : class, new()
 		{

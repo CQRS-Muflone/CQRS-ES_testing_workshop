@@ -1,8 +1,6 @@
 ﻿using CqrsMovie.Seats.Infrastructure.MassTransit.Commands;
 using CqrsMovie.Seats.Infrastructure.MassTransit.Events;
-using CqrsMovie.Seats.Infrastructure.MassTransit.Sagas;
 using CqrsMovie.Seats.Infrastructure.MongoDb;
-using CqrsMovie.Seats.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,7 +8,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Muflone.Eventstore;
 using Muflone.MassTransit.RabbitMQ;
-using Muflone.Saga.Persistence;
 
 namespace CqrsMovie.Seats.API
 {
@@ -25,12 +22,9 @@ namespace CqrsMovie.Seats.API
 
 		public void ConfigureServices(IServiceCollection services)
 		{
-            services.AddMvc(option => option.EnableEndpointRouting = false);
+			services.AddMvc(option => option.EnableEndpointRouting = false);
 			services.AddMongoDB(Configuration.GetConnectionString("MongoDB"));
 			services.AddMufloneEventStore(Configuration.GetConnectionString("EventStore"));
-
-            services.AddScoped<ISagaRepository, InMemorySagaRepository>();
-            services.AddScoped<ISerializer, Serializer>();
 
 			services.Configure<ServiceBusOptions>(Configuration.GetSection("MassTransit:RabbitMQ"));
 			var serviceBusOptions = new ServiceBusOptions();
@@ -42,26 +36,21 @@ namespace CqrsMovie.Seats.API
 				x.AddConsumer<DailyProgrammingCreatedConsumer>();
 
 				x.AddConsumer<BookSeatsConsumer>();
-				//x.AddConsumer<SeatsBookedConsumer>();
+				x.AddConsumer<SeatsBookedConsumer>();
 
 				x.AddConsumer<ReserveSeatsConsumer>();
 				x.AddConsumer<SeatsReservedConsumer>();
 
-                x.AddConsumer<UnReserveSeatsConsumer>();
-
-                x.AddConsumer<RequestPaymentConsumer>();
-
+                //x.AddConsumer<StartBookSeatsSagaCommandConsumer>();
                 x.AddConsumer<StartBookSeatsSagaConsumer>();
                 x.AddConsumer<SeatsBookedSagaConsumer>();
-                x.AddConsumer<PaymentAcceptedSagaConsumer>();
                 x.AddConsumer<SeatsAlreadyTakenSagaConsumer>();
-                x.AddConsumer<UnReservedSeatsSagaConsumer>();
             });
 
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "CQRS-ES Workshop", Version = "v1", Description = "Web Api Services for CQRS-ES workshop" });
-            });
+			services.AddSwaggerGen(c =>
+			{
+				c.SwaggerDoc("v1", new OpenApiInfo { Title = "CQRS-ES Workshop", Version = "v1", Description = "Web Api Services for CQRS-ES workshop" });
+			});
 		}
 
 		public void Configure(IApplicationBuilder app, IHostEnvironment env)
@@ -74,14 +63,13 @@ namespace CqrsMovie.Seats.API
 			app.UseAuthentication();
             app.UseFileServer();
             app.UseRouting();
-			app.UseEndpoints(endpoints =>
+            app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     "default",
                     "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
-            
 
             app.UseSwagger(c =>
             {
