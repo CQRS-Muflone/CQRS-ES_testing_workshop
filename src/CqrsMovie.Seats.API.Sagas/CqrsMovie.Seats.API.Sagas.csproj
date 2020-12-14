@@ -29,6 +29,7 @@
     <ProjectReference Include="..\CqrsMovie.Messages\CqrsMovie.Messages.csproj" />
     <ProjectReference Include="..\CqrsMovie.Seats.Domain\CqrsMovie.Seats.Domain.csproj" />
     <ProjectReference Include="..\CqrsMovie.Seats.Infrastructure\CqrsMovie.Seats.Infrastructure.csproj" />
+    <ProjectReference Include="..\CqrsMovie.Seats.Sagas\CqrsMovie.Seats.Sagas.csproj" />
     <ProjectReference Include="..\Muflone.Saga\src\Muflone.Saga\Muflone.Saga.csproj" />
   </ItemGroup>
 

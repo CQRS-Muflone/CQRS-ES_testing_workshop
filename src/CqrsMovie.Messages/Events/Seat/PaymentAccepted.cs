@@ -1,13 +1,16 @@
 ﻿using System;
-using Muflone.Core;
+using CqrsMovie.SharedKernel.Domain.Ids;
 using Muflone.Messages.Events;
 
 namespace CqrsMovie.Messages.Events.Seat
 {
     public class PaymentAccepted : DomainEvent
     {
-        public PaymentAccepted(IDomainId aggregateId, Guid correlationId, string who = "anonymous") : base(aggregateId, correlationId, who)
+        public readonly PaymentId PaymentId;
+
+        public PaymentAccepted(PaymentId aggregateId, Guid correlationId, string who = "anonymous") : base(aggregateId, correlationId, who)
         {
+            PaymentId = aggregateId;
         }
     }
 }

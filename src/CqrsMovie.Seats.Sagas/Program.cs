@@ -1,16 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Threading;
-using CqrsMovie.Seats.Sagas.Consumers;
 using CqrsMovie.Seats.Sagas.Persistence;
-using GreenPipes;
-using GreenPipes.Configurators;
-using MassTransit;
-using MassTransit.ExtensionsDependencyInjectionIntegration;
-using MassTransit.RabbitMqTransport;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Muflone;
 using Muflone.MassTransit.RabbitMQ;
 using Muflone.Saga.Persistence;
 
@@ -34,10 +27,10 @@ namespace CqrsMovie.Seats.Sagas
             var serviceBusOptions = new ServiceBusOptions();
             configuration.GetSection("MassTransit:RabbitMQ").Bind(serviceBusOptions);
 
-            services.AddMufloneMassTransitWithRabbitMQ(serviceBusOptions, x =>
-            {
-                x.AddConsumer<StartBookSeatsSagaConsumer>();
-            });
+            //services.AddMufloneMassTransitWithRabbitMQ(serviceBusOptions, x =>
+            //{
+            //    x.AddConsumer<StartBookSeatsSagaConsumer>();
+            //});
 
             //services.AddMassTransit(x => x.AddConsumer<StartBookSeatsSagaConsumer>());
             //Action<IRabbitMqHostConfigurator> action = null;

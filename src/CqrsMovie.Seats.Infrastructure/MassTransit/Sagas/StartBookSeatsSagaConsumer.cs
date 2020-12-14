@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using CqrsMovie.Messages.Commands.Seat;
 using MassTransit;
 using Microsoft.Extensions.Logging;
@@ -16,33 +15,11 @@ namespace CqrsMovie.Seats.Infrastructure.MassTransit.Sagas
         {
         }
 
+        protected override ISagaStartedBy<StartBookSeatsSaga> Handler => new BookSeatsSaga(this.ServiceBus, this.Repository);
         public override async Task Consume(ConsumeContext<StartBookSeatsSaga> context)
         {
             using(var handler = this.Handler)
                 await handler.StartedBy(context.Message);
         }
-
-        protected override ISagaStartedBy<StartBookSeatsSaga> Handler => new BookSeatsSaga(this.ServiceBus, this.Repository);
-        
-        #region Dispose
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-            }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        ~StartBookSeatsSagaConsumer()
-        {
-            Dispose(false);
-        }
-
-        #endregion
     }
 }

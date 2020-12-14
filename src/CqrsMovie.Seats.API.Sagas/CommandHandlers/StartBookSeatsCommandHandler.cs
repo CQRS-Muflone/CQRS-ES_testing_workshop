@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using CqrsMovie.Messages.Commands.Seat;
+using CqrsMovie.SharedKernel.Domain.Ids;
 using Microsoft.Extensions.Logging;
 
 namespace CqrsMovie.Seats.API.Sagas.CommandHandlers

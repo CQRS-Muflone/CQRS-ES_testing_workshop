@@ -1,5 +1,5 @@
-using CqrsMovie.Seats.API.Sagas.Consumers;
 using CqrsMovie.Seats.API.Sagas.Persistence;
+using CqrsMovie.Seats.Infrastructure.MassTransit.Sagas;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,10 +31,9 @@ namespace CqrsMovie.Seats.API.Sagas
 
 			services.AddMufloneMassTransitWithRabbitMQ(serviceBusOptions, x =>
 			{
-				//x.AddConsumer<StartBookSeatsSagaConsumer>();
-
-                x.AddConsumer<BookSeatsSagaConsumer>();
-			});
+				x.AddConsumer<StartBookSeatsSagaConsumer>();
+                x.AddConsumer<PaymentAcceptedSagaConsumer>();
+            });
 
             services.AddSwaggerGen(c =>
             {

@@ -47,9 +47,15 @@ namespace CqrsMovie.Seats.API
 				x.AddConsumer<ReserveSeatsConsumer>();
 				x.AddConsumer<SeatsReservedConsumer>();
 
+                x.AddConsumer<UnReserveSeatsConsumer>();
+
+                x.AddConsumer<RequestPaymentConsumer>();
+
                 x.AddConsumer<StartBookSeatsSagaConsumer>();
                 x.AddConsumer<SeatsBookedSagaConsumer>();
+                x.AddConsumer<PaymentAcceptedSagaConsumer>();
                 x.AddConsumer<SeatsAlreadyTakenSagaConsumer>();
+                x.AddConsumer<UnReservedSeatsSagaConsumer>();
             });
 
             services.AddSwaggerGen(c =>
@@ -68,13 +74,14 @@ namespace CqrsMovie.Seats.API
 			app.UseAuthentication();
             app.UseFileServer();
             app.UseRouting();
-            app.UseEndpoints(endpoints =>
+			app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     "default",
                     "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
+            
 
             app.UseSwagger(c =>
             {
