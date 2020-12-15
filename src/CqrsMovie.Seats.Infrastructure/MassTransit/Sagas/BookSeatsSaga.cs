@@ -15,6 +15,7 @@ namespace CqrsMovie.Seats.Infrastructure.MassTransit.Sagas
         ISagaEventHandler<SeatsAlreadyTaken>
     {
         private static readonly Guid DailyProgramming1 = new Guid("ABD6E805-3C9D-4BE4-9B3F-FB8E22CC9D4A");
+        private static readonly Guid SagaCorrelationId = new Guid("ABD6E805-3C9D-4BE4-9B3F-FB8E22CC9D4A");
 
         public class SagaBookedState
         {
@@ -35,20 +36,32 @@ namespace CqrsMovie.Seats.Infrastructure.MassTransit.Sagas
                 SeatsBooked = false,
                 SeatsUnReserved = false
             };
-            await Repository.Save(command.Headers.CorrelationId, sagaState);
+            await Repository.Save(SagaCorrelationId, sagaState);
 
-            await ServiceBus.Send(new BookSeats(new DailyProgrammingId(DailyProgramming1), command.Seats));
+            await this.ServiceBus.Send(new RequestPayment(new PaymentId(Guid.NewGuid()), SagaCorrelationId,
+                command.Seats));
+        }
+
+        public async Task Handle(PaymentAccepted @event)
+        {
+            var sagaState = await this.GetById(SagaCorrelationId);
+            sagaState.PaymentApproved = true;
+            sagaState.SeatsBooked = true;
+            await Repository.Save(SagaCorrelationId, sagaState);
+            
+            await ServiceBus.Send(new BookSeats(new DailyProgrammingId(DailyProgramming1), @event.Seats));
         }
 
         public async Task Handle(SeatsBooked @event)
         {
             try
             {
-                await this.ServiceBus.Send(new RequestPayment(new PaymentId(Guid.NewGuid()), Guid.NewGuid()));
-
-                var sagaState = await this.Repository.GetById<SagaBookedState>(@event.Headers.CorrelationId);
-                sagaState.SeatsBooked = true;
-                await Repository.Save(@event.Headers.CorrelationId, sagaState);
+                //var sagaState = await this.Repository.GetById<SagaBookedState>(SagaCorrelationId);
+                var sagaState = await this.GetById(SagaCorrelationId);
+                sagaState.PaymentApproved = true;
+                await Repository.Save(SagaCorrelationId, sagaState);
+                
+                // Send Email to customer
             }
             catch (Exception ex)
             {
@@ -57,15 +70,22 @@ namespace CqrsMovie.Seats.Infrastructure.MassTransit.Sagas
             }
         }
 
-        public async Task Handle(SeatsAlreadyTaken @event)
+        public Task Handle(SeatsAlreadyTaken @event)
         {
-            await this.ServiceBus.Send(new UnreserveSeats((DailyProgrammingId) @event.AggregateId, @event.Seats));
+            // Send Email to customer
+            return Task.CompletedTask;
         }
 
-        public Task Handle(PaymentAccepted @event)
+        private async Task<SagaBookedState> GetById(Guid correlationId)
         {
-            // Send email to our Customer
-            return Task.CompletedTask;
+            var sagaState = new SagaBookedState
+            {
+                PaymentApproved = false,
+                SeatsBooked = false,
+                SeatsUnReserved = false
+            };
+
+            return await Task.FromResult(sagaState);
         }
     }
 }

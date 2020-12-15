@@ -17,7 +17,7 @@ namespace CqrsMovie.Seats.Domain.CommandHandlers
         {
             try
             {
-                var aggregate = Payment.CreatePayment(command.PaymentId, command.Headers.CorrelationId);
+                var aggregate = Payment.CreatePayment(command.PaymentId, command.Seats, command.Headers.CorrelationId);
                 await Repository.Save(aggregate, Guid.NewGuid(), headers => { });
             }
             catch (Exception ex)

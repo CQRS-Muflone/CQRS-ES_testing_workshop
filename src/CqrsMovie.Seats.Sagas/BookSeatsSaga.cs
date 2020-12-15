@@ -25,7 +25,8 @@ namespace CqrsMovie.Seats.Sagas
 
         public async Task StartedBy(StartBookSeatsSaga command)
         {
-            await this.ServiceBus.Send(new RequestPayment(new PaymentId(Guid.NewGuid()), Guid.NewGuid()));
+            await this.ServiceBus.Send(new RequestPayment(new PaymentId(Guid.NewGuid()), Guid.NewGuid(),
+                command.Seats));
         }
 
         public Task Handle(PaymentAccepted @event)
