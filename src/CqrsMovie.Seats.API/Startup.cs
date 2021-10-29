@@ -1,5 +1,4 @@
-﻿using CqrsMovie.Messages.Commands.Seat;
-using CqrsMovie.Seats.Infrastructure.MassTransit.Commands;
+﻿using CqrsMovie.Seats.Infrastructure.MassTransit.Commands;
 using CqrsMovie.Seats.Infrastructure.MassTransit.Events;
 using CqrsMovie.Seats.Infrastructure.MongoDb;
 using CqrsMovie.Seats.ReadModel.Services.Abstracts;
