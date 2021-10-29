@@ -46,7 +46,7 @@ namespace CqrsMovie.Seats.Domain.Entities
         }
 
         #region BookSeats
-        internal void BookSeats(DailyProgrammingId aggregateId, IEnumerable<Messages.Dtos.Seat> seatsToBook)
+        internal void BookSeats(DailyProgrammingId aggregateId, Guid correlationId, IEnumerable<Messages.Dtos.Seat> seatsToBook)
         {
             // Chk for seats availability
             var seatsToChk = seats.Where(seat => seatsToBook.Any(book => book.ToEntity(SeatState.Reserved).Equals(seat)));
@@ -54,7 +54,7 @@ namespace CqrsMovie.Seats.Domain.Entities
                 throw new Exception("Seats Not Available!");
 
             // Raise event
-            RaiseEvent(new SeatsBooked(aggregateId, seatsToBook));
+            RaiseEvent(new SeatsBooked(aggregateId, correlationId, seatsToBook));
         }
 
         private void Apply(SeatsBooked @event)
@@ -69,7 +69,7 @@ namespace CqrsMovie.Seats.Domain.Entities
         #endregion
 
         #region ReserveSeats
-        internal void ReserveSeat(DailyProgrammingId aggregateId, IEnumerable<Messages.Dtos.Seat> seatsToReserve)
+        internal void ReserveSeat(DailyProgrammingId aggregateId, Guid correlationId, IEnumerable<Messages.Dtos.Seat> seatsToReserve)
         {
             // Chk for seats availability
             var seatsToChk = seats.Where(seat => seatsToReserve.Any(book => book.ToEntity(SeatState.Free).Equals(seat)));
@@ -79,7 +79,7 @@ namespace CqrsMovie.Seats.Domain.Entities
                 return;
             }
 
-            RaiseEvent(new SeatsReserved(aggregateId, seatsToReserve));
+            RaiseEvent(new SeatsReserved(aggregateId, correlationId, seatsToReserve));
         }
 
         private void Apply(SeatsReserved @event)

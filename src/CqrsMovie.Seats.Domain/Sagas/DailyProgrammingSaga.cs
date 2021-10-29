@@ -25,6 +25,7 @@ namespace CqrsMovie.Seats.Domain.Sagas
 
         private readonly Timer timer = new Timer();
 
+        private static readonly Guid CorrelationId = new Guid("c1f4109f-9a97-47b2-91e9-bfce934beed1");
         private static readonly Guid DailyProgramming1 = new Guid("ABD6E805-3C9D-4BE4-9B3F-FB8E22CC9D4A");
         private static readonly IList<Seat> Seats = new List<Seat>
         {
@@ -42,7 +43,7 @@ namespace CqrsMovie.Seats.Domain.Sagas
 
         public async Task Handle(StartSeatsSaga command)
         {
-            var reserveSeats = new ReserveSeats(command.AggregateId, Seats);
+            var reserveSeats = new ReserveSeats(command.AggregateId, CorrelationId, Seats);
             await this.serviceBus.Send(reserveSeats);
         }
 
@@ -55,7 +56,7 @@ namespace CqrsMovie.Seats.Domain.Sagas
 
             // Create a Delay
             Thread.Sleep(20 * 1000);
-            var bookSeats = new BookSeats(@event.AggregateId, Seats);
+            var bookSeats = new BookSeats(@event.AggregateId, CorrelationId, Seats);
             await this.serviceBus.Send(bookSeats);
         }
 

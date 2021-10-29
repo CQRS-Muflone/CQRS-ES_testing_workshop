@@ -12,66 +12,68 @@ using Muflone.SpecificationTests;
 
 namespace CqrsMovie.Seats.Domain.Tests.Entities
 {
-  public class BookSeats_Booking : CommandSpecification<BookSeats>
-  {
-    private readonly DailyProgrammingId aggregateId = new DailyProgrammingId(Guid.NewGuid());
-    private readonly MovieId movieId = new MovieId(Guid.NewGuid());
-    private readonly ScreenId screenId = new ScreenId(Guid.NewGuid());
-    private readonly DateTime dailyDate = DateTime.Today;
-    private readonly string movieTitle = "rambo";
-    private readonly string screenName = "screen 99";
-    private readonly IEnumerable<Seat> seats;
-    private readonly IEnumerable<Seat> seatsToReserve;
-    private readonly IEnumerable<Seat> seatsToBook;
-
-    public BookSeats_Booking()
+    public class BookSeats_Booking : CommandSpecification<BookSeats>
     {
-      seats = new List<Seat>
-      {
-          new Seat { Number = 1, Row = "A" },
-          new Seat { Number = 2, Row = "A" },
-          new Seat { Number = 3, Row = "A" },
-          new Seat { Number = 4, Row = "A" },
-          new Seat { Number = 1, Row = "B" },
-          new Seat { Number = 2, Row = "B" },
-          new Seat { Number = 3, Row = "B" },
-          new Seat { Number = 4, Row = "B" }
-      };
+        private readonly DailyProgrammingId aggregateId = new DailyProgrammingId(Guid.NewGuid());
+        private readonly MovieId movieId = new MovieId(Guid.NewGuid());
+        private readonly ScreenId screenId = new ScreenId(Guid.NewGuid());
+        private readonly DateTime dailyDate = DateTime.Today;
+        private readonly string movieTitle = "rambo";
+        private readonly string screenName = "screen 99";
+        private readonly IEnumerable<Seat> seats;
+        private readonly IEnumerable<Seat> seatsToReserve;
+        private readonly IEnumerable<Seat> seatsToBook;
 
-      seatsToBook = new List<Seat>
-      {
-          new Seat { Number = 1, Row = "B" },
-          new Seat { Number = 2, Row = "B" },
-          new Seat { Number = 3, Row = "B" }
-      };
+        private readonly Guid correlationId = Guid.NewGuid();
 
-      seatsToReserve = new List<Seat>
-      {
-        new Seat { Number = 1, Row = "B" },
-        new Seat { Number = 2, Row = "B" },
-        new Seat { Number = 3, Row = "B" }
-      };
+        public BookSeats_Booking()
+        {
+            seats = new List<Seat>
+              {
+                  new Seat { Number = 1, Row = "A" },
+                  new Seat { Number = 2, Row = "A" },
+                  new Seat { Number = 3, Row = "A" },
+                  new Seat { Number = 4, Row = "A" },
+                  new Seat { Number = 1, Row = "B" },
+                  new Seat { Number = 2, Row = "B" },
+                  new Seat { Number = 3, Row = "B" },
+                  new Seat { Number = 4, Row = "B" }
+              };
+
+            seatsToBook = new List<Seat>
+              {
+                  new Seat { Number = 1, Row = "B" },
+                  new Seat { Number = 2, Row = "B" },
+                  new Seat { Number = 3, Row = "B" }
+              };
+
+            seatsToReserve = new List<Seat>
+              {
+                new Seat { Number = 1, Row = "B" },
+                new Seat { Number = 2, Row = "B" },
+                new Seat { Number = 3, Row = "B" }
+              };
+        }
+
+        protected override IEnumerable<DomainEvent> Given()
+        {
+            yield return new DailyProgrammingCreated(aggregateId, movieId, screenId, dailyDate, seats, movieTitle, screenName);
+            yield return new SeatsReserved(aggregateId, this.correlationId, seatsToReserve);
+        }
+
+        protected override BookSeats When()
+        {
+            return new BookSeats(aggregateId, Guid.NewGuid(), seatsToBook);
+        }
+
+        protected override ICommandHandler<BookSeats> OnHandler()
+        {
+            return new BookSeatsCommandHandler(Repository, new NullLoggerFactory());
+        }
+
+        protected override IEnumerable<DomainEvent> Expect()
+        {
+            yield return new SeatsBooked(aggregateId, correlationId, seatsToBook);
+        }
     }
-
-    protected override IEnumerable<DomainEvent> Given()
-    {
-      yield return new DailyProgrammingCreated(aggregateId, movieId, screenId, dailyDate, seats, movieTitle, screenName);
-      yield return new SeatsReserved(aggregateId, seatsToReserve);
-    }
-
-    protected override BookSeats When()
-    {
-      return new BookSeats(aggregateId, seatsToBook);
-    }
-
-    protected override ICommandHandler<BookSeats> OnHandler()
-    {
-      return new BookSeatsCommandHandler(Repository, new NullLoggerFactory());
-    }
-
-    protected override IEnumerable<DomainEvent> Expect()
-    {
-      yield return new SeatsBooked(aggregateId, seatsToBook);
-    }
-  }
 }

@@ -23,6 +23,8 @@ namespace CqrsMovie.Seats.Domain.Tests.Entities
         private readonly IEnumerable<Seat> seats;
         private readonly IEnumerable<Seat> seatsToReserve;
 
+        private readonly Guid correlationId = Guid.NewGuid();
+
         public FreeSeats_Release()
         {
             seats = new List<Seat>
@@ -48,7 +50,7 @@ namespace CqrsMovie.Seats.Domain.Tests.Entities
         protected override IEnumerable<DomainEvent> Given()
         {
             yield return new DailyProgrammingCreated(aggregateId, movieId, screenId, dailyDate, seats, movieTitle, screenName);
-            yield return new SeatsReserved(aggregateId, seatsToReserve);
+            yield return new SeatsReserved(aggregateId, this.correlationId, seatsToReserve);
         }
 
         protected override FreeSeats When()

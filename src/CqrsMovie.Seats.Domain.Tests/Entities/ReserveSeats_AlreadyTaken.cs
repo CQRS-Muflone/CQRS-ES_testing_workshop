@@ -24,6 +24,8 @@ namespace CqrsMovie.Seats.Domain.Tests.Entities
         private readonly IEnumerable<Seat> seatsToBook;
         private readonly IEnumerable<Seat> seatsToReserve;
 
+        private readonly Guid correlationId = Guid.NewGuid();
+
         public ReserveSeats_AlreadyTaken()
         {
             seats = new List<Seat>
@@ -57,12 +59,12 @@ namespace CqrsMovie.Seats.Domain.Tests.Entities
         {
             yield return new DailyProgrammingCreated(aggregateId, movieId, screenId, dailyDate, seats, movieTitle, screenName);
             yield return new SeatsReserved(aggregateId, seatsToReserve);
-            yield return new SeatsBooked(aggregateId, seatsToBook);
+            yield return new SeatsBooked(aggregateId, this.correlationId, seatsToBook);
         }
 
         protected override ReserveSeats When()
         {
-            return new ReserveSeats(aggregateId, seatsToReserve);
+            return new ReserveSeats(aggregateId, this.correlationId, seatsToReserve);
         }
 
         protected override ICommandHandler<ReserveSeats> OnHandler()

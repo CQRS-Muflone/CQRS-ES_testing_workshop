@@ -64,7 +64,7 @@ namespace CqrsMovie.Website.Controllers
                   new Seat { Number = 2, Row = "B" },
                   new Seat { Number = 3, Row = "B" }
               };
-            await serviceBus.Send(new BookSeats(new DailyProgrammingId(DailyProgramming1), seats));
+            await serviceBus.Send(new BookSeats(new DailyProgrammingId(DailyProgramming1), Guid.NewGuid(), seats));
 
             ViewData["Message"] = "BookSeats commands sent";
             return RedirectToAction("Index");
@@ -79,7 +79,7 @@ namespace CqrsMovie.Website.Controllers
                 new Seat { Number = 2, Row = "B" },
                 new Seat { Number = 3, Row = "B" }
               };
-            await serviceBus.Send(new ReserveSeats(new DailyProgrammingId(DailyProgramming1), seats));
+            await serviceBus.Send(new ReserveSeats(new DailyProgrammingId(DailyProgramming1), Guid.NewGuid(), seats));
 
             ViewData["Message"] = "ReserveSeats commands sent";
             return RedirectToAction("Index");

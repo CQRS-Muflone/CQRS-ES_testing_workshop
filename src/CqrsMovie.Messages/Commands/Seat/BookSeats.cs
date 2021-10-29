@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Muflone.Core;
 using Muflone.Messages.Commands;
 
@@ -8,8 +9,8 @@ namespace CqrsMovie.Messages.Commands.Seat
     {
         public IEnumerable<Dtos.Seat> Seats { get; }
 
-        public BookSeats(IDomainId aggregateId, IEnumerable<Dtos.Seat> seats) :
-            base(aggregateId)
+        public BookSeats(IDomainId aggregateId, Guid correlationId, IEnumerable<Dtos.Seat> seats,
+            string who = "anonymous") : base(aggregateId, correlationId, who)
         {
             Seats = seats;
         }
