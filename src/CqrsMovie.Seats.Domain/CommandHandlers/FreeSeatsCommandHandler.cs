@@ -19,7 +19,7 @@ namespace CqrsMovie.Seats.Domain.CommandHandlers
             try
             {
                 var entity = await Repository.GetById<DailyProgramming>(command.AggregateId);
-                entity.ReleaseSeats((DailyProgrammingId)entity.Id, command.Seats);
+                entity.ReleaseSeats((DailyProgrammingId)entity.Id, command.Headers.CorrelationId, command.Seats);
                 await Repository.Save(entity, Guid.NewGuid(), headers => { });
             }
             catch (Exception e)

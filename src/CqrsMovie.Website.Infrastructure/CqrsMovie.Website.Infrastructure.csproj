@@ -16,4 +16,9 @@
     <ProjectReference Include="..\CqrsMovie.Website.ReadModel\CqrsMovie.Website.ReadModel.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Orchestrator\Abstracts\" />
+    <Folder Include="Orchestrator\Concrete\" />
+  </ItemGroup>
+
 </Project>

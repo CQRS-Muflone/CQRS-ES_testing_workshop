@@ -10,21 +10,21 @@ using Muflone.Persistence;
 
 namespace CqrsMovie.Seats.Infrastructure.MassTransit.Commands
 {
-    public class StartSeatsSagaConsumer : CommandConsumer<StartSeatsSaga>
+    public class StartSagaFromSeatsReservedConsumer : CommandConsumer<StartSagaFromSeatsReserved>
     {
         private readonly IServiceBus serviceBus;
         private readonly ISeatsService seatsService;
 
-        public StartSeatsSagaConsumer(IRepository repository, ILoggerFactory loggerFactory,
+        public StartSagaFromSeatsReservedConsumer(IRepository repository, ILoggerFactory loggerFactory,
             IServiceBus serviceBus, ISeatsService seatsService) : base(repository, loggerFactory)
         {
             this.serviceBus = serviceBus;
             this.seatsService = seatsService;
         }
 
-        protected override ICommandHandler<StartSeatsSaga> Handler =>
-            new DailyProgrammingSaga(this.serviceBus, this.seatsService);
-        public override async Task Consume(ConsumeContext<StartSeatsSaga> context)
+        protected override ICommandHandler<StartSagaFromSeatsReserved> Handler =>
+            new StartSagaFromSeatReserved(this.serviceBus, this.seatsService);
+        public override async Task Consume(ConsumeContext<StartSagaFromSeatsReserved> context)
         {
             using var handler = this.Handler;
             await handler.Handle(context.Message);

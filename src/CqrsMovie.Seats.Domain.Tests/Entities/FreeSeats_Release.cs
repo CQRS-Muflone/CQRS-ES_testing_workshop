@@ -55,7 +55,7 @@ namespace CqrsMovie.Seats.Domain.Tests.Entities
 
         protected override FreeSeats When()
         {
-            return new FreeSeats(this.aggregateId, this.seatsToReserve);
+            return new FreeSeats(this.aggregateId, this.correlationId, this.seatsToReserve);
         }
 
         protected override ICommandHandler<FreeSeats> OnHandler()
@@ -65,7 +65,7 @@ namespace CqrsMovie.Seats.Domain.Tests.Entities
 
         protected override IEnumerable<DomainEvent> Expect()
         {
-            yield return new SeatsFreed(this.aggregateId, this.seatsToReserve);
+            yield return new SeatsFreed(this.aggregateId, this.correlationId, this.seatsToReserve);
         }
     }
 }

@@ -40,17 +40,22 @@ namespace CqrsMovie.Seats.API
 				x.AddConsumer<CreateDailyProgrammingConsumer>();
 				x.AddConsumer<DailyProgrammingCreatedConsumer>();
 
-                x.AddConsumer<StartSeatsSagaConsumer>();
-
 				x.AddConsumer<BookSeatsConsumer>();
 				x.AddConsumer<SeatsBookedConsumer>();
 
-                x.AddConsumer<FreeSeatsConsumer>();
+                //x.AddConsumer<StartSeatsSagaConsumer>();
+				x.AddConsumer<FreeSeatsConsumer>();
                 x.AddConsumer<SeatsFreedConsumer>();
 
 				x.AddConsumer<ReserveSeatsConsumer>();
 				x.AddConsumer<SeatsReservedConsumer>();
-			});
+
+                //x.AddConsumer<StartSagaFromSeatsReservedConsumer>();
+                x.AddConsumer<AcceptPaymentConsumer>();
+                x.AddConsumer<PaymentAcceptedConsumer>();
+
+                x.AddConsumer<SeatsAlreadyFreedConsumer>();
+            });
 
             services.AddSwaggerGen(c =>
             {

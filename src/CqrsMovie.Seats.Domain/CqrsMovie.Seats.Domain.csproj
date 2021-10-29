@@ -15,8 +15,4 @@
     <ProjectReference Include="..\CqrsMovie.SharedKernel\CqrsMovie.SharedKernel.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Sagas\" />
-  </ItemGroup>
-
 </Project>

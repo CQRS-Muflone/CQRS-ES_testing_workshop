@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using CqrsMovie.Core.Enums;
+using CqrsMovie.Messages.Events.Payment;
 using CqrsMovie.Messages.Events.Seat;
 using CqrsMovie.SharedKernel.Domain.Ids;
 using Muflone.Core;
@@ -28,10 +29,10 @@ namespace CqrsMovie.Seats.Domain.Entities
             return new DailyProgramming(aggregateId, movieId, screenId, date, freeSeats, movieTitle, screenName);
         }
 
-        private DailyProgramming(DailyProgrammingId aggregateId, MovieId movieId, ScreenId screenId, DateTime date, IEnumerable<Messages.Dtos.Seat> freeSeats, string movieTitle, string screenName)
+        private DailyProgramming(DailyProgrammingId aggregateId, MovieId movieId, ScreenId screenId, DateTime date,
+            IEnumerable<Messages.Dtos.Seat> freeSeats, string movieTitle, string screenName)
         {
             //Null checks etc. ....
-
 
             RaiseEvent(new DailyProgrammingCreated(aggregateId, movieId, screenId, date, freeSeats, movieTitle, screenName));
         }
@@ -51,7 +52,10 @@ namespace CqrsMovie.Seats.Domain.Entities
             // Chk for seats availability
             var seatsToChk = seats.Where(seat => seatsToBook.Any(book => book.ToEntity(SeatState.Reserved).Equals(seat)));
             if (seatsToChk.Count() != seatsToBook.Count())
-                throw new Exception("Seats Not Available!");
+            {
+                RaiseEvent(new SeatsAlreadyFreed(aggregateId, correlationId, seatsToBook));
+                return;
+            }
 
             // Raise event
             RaiseEvent(new SeatsBooked(aggregateId, correlationId, seatsToBook));
@@ -97,11 +101,11 @@ namespace CqrsMovie.Seats.Domain.Entities
         #endregion
 
         #region FreeSeats
-        internal void ReleaseSeats(DailyProgrammingId aggregateId, IEnumerable<Messages.Dtos.Seat> seatsToRelease)
+        internal void ReleaseSeats(DailyProgrammingId aggregateId, Guid correlationId, IEnumerable<Messages.Dtos.Seat> seatsToRelease)
         {
             // Chk ...
 
-            RaiseEvent(new SeatsFreed(aggregateId, seatsToRelease));
+            RaiseEvent(new SeatsFreed(aggregateId, correlationId, seatsToRelease));
         }
 
         private void Apply(SeatsFreed @event)
@@ -112,6 +116,13 @@ namespace CqrsMovie.Seats.Domain.Entities
                 seats.Remove(seat);
                 seats.Add(new Seat(seat.Row, seat.Number, SeatState.Free));
             }
+        }
+        #endregion
+
+        #region Payment
+        internal void AcceptPayment(DailyProgrammingId aggregateId, Guid correlationId)
+        {
+            RaiseEvent(new PaymentAccepted(aggregateId, correlationId));
         }
         #endregion
     }

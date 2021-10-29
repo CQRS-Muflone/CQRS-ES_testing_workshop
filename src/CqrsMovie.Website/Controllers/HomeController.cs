@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using CqrsMovie.Messages.Commands.Payment;
 using CqrsMovie.Messages.Commands.Seat;
 using CqrsMovie.Messages.Dtos;
 using CqrsMovie.SharedKernel.Domain.Ids;
+using CqrsMovie.Website.Infrastructure.Orchestrator.Abstracts;
 using Microsoft.AspNetCore.Mvc;
 using CqrsMovie.Website.Models;
 using Microsoft.Extensions.Logging;
@@ -15,12 +17,17 @@ namespace CqrsMovie.Website.Controllers
     public class HomeController : BaseController
     {
         private readonly IServiceBus serviceBus;
+        private readonly ISeatsOrchestrator seatsOrchestrator;
         private static readonly Guid DailyProgramming1 = new Guid("ABD6E805-3C9D-4BE4-9B3F-FB8E22CC9D4A");
         private static readonly Guid DailyProgramming2 = new Guid("613E87B2-CB17-4AB3-85EF-BD78D3C3463C");
 
-        public HomeController(ILoggerFactory loggerFactory, IServiceBus serviceBus) : base(loggerFactory)
+        private static readonly Guid CorrelationId = new Guid("c1f4109f-9a97-47b2-91e9-bfce934beed1");
+
+        public HomeController(ILoggerFactory loggerFactory, IServiceBus serviceBus,
+            ISeatsOrchestrator seatsOrchestrator) : base(loggerFactory)
         {
             this.serviceBus = serviceBus;
+            this.seatsOrchestrator = seatsOrchestrator;
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -79,7 +86,7 @@ namespace CqrsMovie.Website.Controllers
                 new Seat { Number = 2, Row = "B" },
                 new Seat { Number = 3, Row = "B" }
               };
-            await serviceBus.Send(new ReserveSeats(new DailyProgrammingId(DailyProgramming1), Guid.NewGuid(), seats));
+            await serviceBus.Send(new ReserveSeats(new DailyProgrammingId(DailyProgramming1), CorrelationId, seats));
 
             ViewData["Message"] = "ReserveSeats commands sent";
             return RedirectToAction("Index");
@@ -94,11 +101,21 @@ namespace CqrsMovie.Website.Controllers
                 new Seat { Number = 2, Row = "B" },
                 new Seat { Number = 3, Row = "B" }
             };
-            await serviceBus.Send(new StartSeatsSaga(new DailyProgrammingId(DailyProgramming1), seats));
+            await this.seatsOrchestrator.StartSagaFromReserveSeats(DailyProgramming1, seats);
+
+            //await this.seatsOrchestrator.StartSeatsSaga(DailyProgramming2, seats);
 
             ViewData["Message"] = "StartSaga commands sent";
             return RedirectToAction("Index");
         }
 
+        [HttpPost]
+        public async Task<IActionResult> AcceptPayment()
+        {
+            await this.serviceBus.Send(new AcceptPayment(new DailyProgrammingId(DailyProgramming1), CorrelationId));
+
+            ViewData["Message"] = "AcceptPayment commands sent";
+            return RedirectToAction("Index");
+        }
     }
 }

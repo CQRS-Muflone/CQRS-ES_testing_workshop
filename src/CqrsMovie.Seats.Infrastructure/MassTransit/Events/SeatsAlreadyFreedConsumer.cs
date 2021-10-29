@@ -10,21 +10,21 @@ using Muflone.Messages.Events;
 
 namespace CqrsMovie.Seats.Infrastructure.MassTransit.Events
 {
-    public class SeatsFreedConsumer : DomainEventConsumer<SeatsFreed>
+    public class SeatsAlreadyFreedConsumer : DomainEventConsumer<SeatsAlreadyFreed>
     {
         private readonly IServiceBus serviceBus;
         private readonly ISeatsService seatsService;
 
-        public SeatsFreedConsumer(IPersister persister, ILoggerFactory loggerFactory,
-            IServiceBus serviceBus, ISeatsService seatsService) : base(persister, loggerFactory)
+        public SeatsAlreadyFreedConsumer(IPersister persister, ILoggerFactory loggerFactory, IServiceBus serviceBus,
+            ISeatsService seatsService) : base(persister, loggerFactory)
         {
             this.serviceBus = serviceBus;
             this.seatsService = seatsService;
         }
 
-        protected override IDomainEventHandler<SeatsFreed> Handler =>
-            new StartSagaFromReserveSeat(this.serviceBus, this.seatsService);
-        public override async Task Consume(ConsumeContext<SeatsFreed> context)
+        protected override IDomainEventHandler<SeatsAlreadyFreed> Handler =>
+            new StartSagaFromReserveSeat(serviceBus, seatsService);
+        public override async Task Consume(ConsumeContext<SeatsAlreadyFreed> context)
         {
             using var handler = this.Handler;
             await handler.Handle(context.Message);

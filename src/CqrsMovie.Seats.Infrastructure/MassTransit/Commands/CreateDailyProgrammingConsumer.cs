@@ -8,18 +8,18 @@ using Muflone.Persistence;
 
 namespace CqrsMovie.Seats.Infrastructure.MassTransit.Commands
 {
-  public class CreateDailyProgrammingConsumer : CommandConsumer<CreateDailyProgramming>
-  {
-    public CreateDailyProgrammingConsumer(IRepository repository, ILoggerFactory loggerFactory) : base(repository, loggerFactory)
+    public class CreateDailyProgrammingConsumer : CommandConsumer<CreateDailyProgramming>
     {
-    }
+        public CreateDailyProgrammingConsumer(IRepository repository, ILoggerFactory loggerFactory) : base(repository, loggerFactory)
+        {
+        }
 
-    protected override ICommandHandler<CreateDailyProgramming> Handler => new CreateDailyProgrammingCommandHandler(Repository, LoggerFactory);
+        protected override ICommandHandler<CreateDailyProgramming> Handler => new CreateDailyProgrammingCommandHandler(Repository, LoggerFactory);
 
-    public override async Task Consume(ConsumeContext<CreateDailyProgramming> context)
-    {
-      using (var handler = Handler)
-        await handler.Handle(context.Message);
+        public override async Task Consume(ConsumeContext<CreateDailyProgramming> context)
+        {
+            using var handler = this.Handler;
+            await handler.Handle(context.Message);
+        }
     }
-  }
 }

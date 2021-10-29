@@ -1,5 +1,7 @@
 ﻿using CqrsMovie.Website.Infrastructure.MassTransit.Events;
 using CqrsMovie.Website.Infrastructure.MongoDb;
+using CqrsMovie.Website.Infrastructure.Orchestrator.Abstracts;
+using CqrsMovie.Website.Infrastructure.Orchestrator.Concrete;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,6 +32,8 @@ namespace CqrsMovie.Website
         x.AddConsumer<SeatsBookedConsumer>();
         x.AddConsumer<SeatsReservedConsumer>();
       });
+
+      services.AddScoped<ISeatsOrchestrator, SeatsOrchestrator>();
     }
 
     public void Configure(IApplicationBuilder app, IHostEnvironment env)

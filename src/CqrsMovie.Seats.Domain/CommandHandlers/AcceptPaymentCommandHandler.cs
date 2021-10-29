@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using CqrsMovie.Messages.Commands.Seat;
+using CqrsMovie.Messages.Commands.Payment;
 using CqrsMovie.Seats.Domain.Entities;
 using CqrsMovie.SharedKernel.Domain.Ids;
 using Microsoft.Extensions.Logging;
@@ -8,23 +8,23 @@ using Muflone.Persistence;
 
 namespace CqrsMovie.Seats.Domain.CommandHandlers
 {
-    public class BookSeatsCommandHandler : CommandHandler<BookSeats>
+    public class AcceptPaymentCommandHandler : CommandHandler<AcceptPayment>
     {
-        public BookSeatsCommandHandler(IRepository repository, ILoggerFactory loggerFactory) : base(repository, loggerFactory)
+        public AcceptPaymentCommandHandler(IRepository repository, ILoggerFactory loggerFactory) : base(repository, loggerFactory)
         {
         }
 
-        public override async Task Handle(BookSeats command)
+        public override async Task Handle(AcceptPayment command)
         {
             try
             {
                 var entity = await Repository.GetById<DailyProgramming>(command.AggregateId);
-                entity.BookSeats((DailyProgrammingId)entity.Id, command.Headers.CorrelationId, command.Seats);
+                entity.AcceptPayment((DailyProgrammingId)entity.Id, command.Headers.CorrelationId);
                 await Repository.Save(entity, Guid.NewGuid(), headers => { });
             }
             catch (Exception e)
             {
-                Logger.LogError($"BookSeatsCommand: Error processing the command: {e.Message} - StackTrace: {e.StackTrace}");
+                Logger.LogError($"AcceptPaymentCommandHandler: Error processing the command: {e.Message} - StackTrace: {e.StackTrace}");
                 throw;
             }
         }
