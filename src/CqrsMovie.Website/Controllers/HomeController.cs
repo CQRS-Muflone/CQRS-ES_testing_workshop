@@ -112,7 +112,7 @@ namespace CqrsMovie.Website.Controllers
         [HttpPost]
         public async Task<IActionResult> AcceptPayment()
         {
-            await this.serviceBus.Send(new AcceptPayment(new DailyProgrammingId(DailyProgramming1), CorrelationId));
+            await this.seatsOrchestrator.StartSagaFromSeatsReserved(DailyProgramming1, CorrelationId);
 
             ViewData["Message"] = "AcceptPayment commands sent";
             return RedirectToAction("Index");

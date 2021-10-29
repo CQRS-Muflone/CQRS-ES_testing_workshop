@@ -48,17 +48,20 @@ namespace CqrsMovie.Seats.Domain.Sagas
             this.seatsService = seatsService;
         }
 
-        public Task Handle(StartSagaFromSeatsReserved command)
+        public async Task Handle(StartSagaFromSeatsReserved command)
         {
-            throw new NotImplementedException();
+            await this.serviceBus.Send(new AcceptPayment(new DailyProgrammingId(DailyProgramming1), command.Headers.CorrelationId));
         }
 
         public Task Handle(SeatsReserved @event)
         {
-            // Send request for CreditCard Authorization
-            // Mock it with a delay
+            if (!@event.Headers.CorrelationId.Equals(CorrelationId))
+                return Task.CompletedTask;
+
+            // Start Timer
+            // you have 5 minutes to click "Accept Payment" from UI
             this.timer.Elapsed += this.PaymentRefused;
-            this.timer.Interval = 60 * 1000;
+            this.timer.Interval = 5 * 60 * 1000;
             this.timer.Enabled = true;
 
             return Task.CompletedTask;
@@ -66,6 +69,9 @@ namespace CqrsMovie.Seats.Domain.Sagas
 
         public async Task Handle(PaymentAccepted @event)
         {
+            if (!@event.Headers.CorrelationId.Equals(CorrelationId))
+                return;
+
             var bookSeats = new BookSeats(@event.AggregateId, CorrelationId, Seats);
             await this.serviceBus.Send(bookSeats);
         }

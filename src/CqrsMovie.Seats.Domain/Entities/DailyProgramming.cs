@@ -124,6 +124,9 @@ namespace CqrsMovie.Seats.Domain.Entities
         {
             RaiseEvent(new PaymentAccepted(aggregateId, correlationId));
         }
+
+        private void Apply(PaymentAccepted @event)
+        {}
         #endregion
     }
 }

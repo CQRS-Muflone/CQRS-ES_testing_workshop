@@ -1,12 +1,12 @@
 ﻿using System;
-using Muflone.Core;
+using CqrsMovie.SharedKernel.Domain.Ids;
 using Muflone.Messages.Events;
 
 namespace CqrsMovie.Messages.Events.Payment
 {
     public class PaymentAccepted : DomainEvent
     {
-        public PaymentAccepted(IDomainId aggregateId, Guid correlationId, string who = "anonymous") : base(aggregateId,
+        public PaymentAccepted(DailyProgrammingId aggregateId, Guid correlationId, string who = "anonymous") : base(aggregateId,
             correlationId, who)
         {
         }

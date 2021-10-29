@@ -49,7 +49,7 @@ namespace CqrsMovie.Seats.API
 				x.AddConsumer<ReserveSeatsConsumer>();
 				x.AddConsumer<SeatsReservedConsumer>();
 
-                //x.AddConsumer<StartSagaFromSeatsReservedConsumer>();
+                x.AddConsumer<StartSagaFromSeatsReservedConsumer>();
                 x.AddConsumer<AcceptPaymentConsumer>();
                 x.AddConsumer<PaymentAcceptedConsumer>();
 

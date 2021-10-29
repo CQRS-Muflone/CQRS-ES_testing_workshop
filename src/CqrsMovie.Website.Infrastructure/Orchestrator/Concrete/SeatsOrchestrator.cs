@@ -22,5 +22,11 @@ namespace CqrsMovie.Website.Infrastructure.Orchestrator.Concrete
         {
             await serviceBus.Send(new StartSeatsSaga(new DailyProgrammingId(aggregateId), seats));
         }
+
+        public async Task StartSagaFromSeatsReserved(Guid aggregateId, Guid correlationId)
+        {
+            await this.serviceBus.Send(new StartSagaFromSeatsReserved(new DailyProgrammingId(aggregateId),
+                correlationId));
+        }
     }
 }

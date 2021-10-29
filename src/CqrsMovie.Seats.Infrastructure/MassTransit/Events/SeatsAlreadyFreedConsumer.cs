@@ -22,8 +22,12 @@ namespace CqrsMovie.Seats.Infrastructure.MassTransit.Events
             this.seatsService = seatsService;
         }
 
-        protected override IDomainEventHandler<SeatsAlreadyFreed> Handler =>
-            new StartSagaFromReserveSeat(serviceBus, seatsService);
+        // Use this with Saga from ReserveSeat
+        //protected override IDomainEventHandler<SeatsAlreadyFreed> Handler => new StartSagaFromReserveSeat(serviceBus, seatsService);
+
+        // Use this with Saga from SeatsReserved
+        protected override IDomainEventHandler<SeatsAlreadyFreed> Handler => new StartSagaFromSeatReserved(serviceBus, seatsService);
+
         public override async Task Consume(ConsumeContext<SeatsAlreadyFreed> context)
         {
             using var handler = this.Handler;
