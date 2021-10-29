@@ -8,23 +8,23 @@ using Muflone.Persistence;
 
 namespace CqrsMovie.Seats.Domain.CommandHandlers
 {
-    public class ReserveSeatsCommandHandler : CommandHandler<ReserveSeats>
+    public class FreeSeatsCommandHandler : CommandHandler<FreeSeats>
     {
-        public ReserveSeatsCommandHandler(IRepository repository, ILoggerFactory loggerFactory) : base(repository, loggerFactory)
+        public FreeSeatsCommandHandler(IRepository repository, ILoggerFactory loggerFactory) : base(repository, loggerFactory)
         {
         }
 
-        public override async Task Handle(ReserveSeats command)
+        public override async Task Handle(FreeSeats command)
         {
             try
             {
                 var entity = await Repository.GetById<DailyProgramming>(command.AggregateId);
-                entity.ReserveSeat((DailyProgrammingId)entity.Id, command.Seats);
+                entity.ReleaseSeats((DailyProgrammingId)entity.Id, command.Seats);
                 await Repository.Save(entity, Guid.NewGuid(), headers => { });
             }
             catch (Exception e)
             {
-                Logger.LogError($"ReserveSeatsCommand: Error processing the command: {e.Message} - StackTrace: {e.StackTrace}");
+                Logger.LogError($"FreeSeatsCommand: Error processing the command: {e.Message} - StackTrace: {e.StackTrace}");
                 throw;
             }
         }

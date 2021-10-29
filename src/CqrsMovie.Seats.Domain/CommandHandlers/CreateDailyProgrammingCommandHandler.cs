@@ -19,7 +19,8 @@ namespace CqrsMovie.Seats.Domain.CommandHandlers
     {
       try
       {
-          var entity = DailyProgramming.CreateDailyProgramming((DailyProgrammingId)command.AggregateId, command.MovieId, command.ScreenId, command.Date, command.Seats, command.MovieTitle, command.ScreenName);
+          var entity = DailyProgramming.CreateDailyProgramming((DailyProgrammingId) command.AggregateId,
+              command.MovieId, command.ScreenId, command.Date, command.Seats, command.MovieTitle, command.ScreenName);
                 await Repository.Save(entity, Guid.NewGuid(), headers => { });
       }
       catch (Exception e)

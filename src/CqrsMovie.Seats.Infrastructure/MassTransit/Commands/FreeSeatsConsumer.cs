@@ -8,14 +8,14 @@ using Muflone.Persistence;
 
 namespace CqrsMovie.Seats.Infrastructure.MassTransit.Commands
 {
-    public class ReserveSeatsConsumer : CommandConsumer<ReserveSeats>
+    public class FreeSeatsConsumer : CommandConsumer<FreeSeats>
     {
-        public ReserveSeatsConsumer(IRepository repository, ILoggerFactory loggerFactory) : base(repository, loggerFactory)
+        public FreeSeatsConsumer(IRepository repository, ILoggerFactory loggerFactory) : base(repository, loggerFactory)
         {
         }
 
-        protected override ICommandHandler<ReserveSeats> Handler => new ReserveSeatsCommandHandler(Repository, LoggerFactory);
-        public override async Task Consume(ConsumeContext<ReserveSeats> context)
+        protected override ICommandHandler<FreeSeats> Handler => new FreeSeatsCommandHandler(Repository, LoggerFactory);
+        public override async Task Consume(ConsumeContext<FreeSeats> context)
         {
             using var handler = this.Handler;
             await handler.Handle(context.Message);

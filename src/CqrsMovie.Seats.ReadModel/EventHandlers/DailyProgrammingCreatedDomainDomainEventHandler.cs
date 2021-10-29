@@ -1,32 +1,24 @@
 ﻿using System.Threading.Tasks;
-using CqrsMovie.Core.Enums;
 using CqrsMovie.Messages.Events.Seat;
-using CqrsMovie.Seats.ReadModel.Dtos;
+using CqrsMovie.Seats.ReadModel.Services.Abstracts;
 using CqrsMovie.SharedKernel.ReadModel;
 using Microsoft.Extensions.Logging;
 
 namespace CqrsMovie.Seats.ReadModel.EventHandlers
 {
-  public class DailyProgrammingCreatedDomainDomainEventHandler : DomainEventHandler<DailyProgrammingCreated>
-  {
-    public DailyProgrammingCreatedDomainDomainEventHandler(IPersister persister, ILoggerFactory loggerFactory)
-      : base(persister, loggerFactory)
+    public class DailyProgrammingCreatedDomainDomainEventHandler : DomainEventHandler<DailyProgrammingCreated>
     {
-    }
+        private readonly ISeatsService seatsService;
 
-    public override async Task Handle(DailyProgrammingCreated @event)
-    {
-      var entity = new DailyProgramming()
-      {
-        Date = @event.Date,
-        Id = @event.AggregateId.ToString(),
-        ScreenId = @event.ScreenId.ToString(),
-        Seats = @event.Seats.ToReadModel(SeatState.Free),
-        MovieId = @event.MovieId.ToString(),
-        MovieTitle = @event.MovieTitle,
-        ScreenName = @event.ScreenName
-      };
-      await Persister.Insert(entity);
+        public DailyProgrammingCreatedDomainDomainEventHandler(IPersister persister, ILoggerFactory loggerFactory, ISeatsService seatsService)
+          : base(persister, loggerFactory)
+        {
+            this.seatsService = seatsService;
+        }
+
+        public override async Task Handle(DailyProgrammingCreated @event)
+        {
+            await this.seatsService.AddDailyProgrammingAsync(@event);
+        }
     }
-  }
 }

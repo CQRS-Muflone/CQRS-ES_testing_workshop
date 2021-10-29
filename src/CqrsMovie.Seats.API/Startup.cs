@@ -1,6 +1,9 @@
-﻿using CqrsMovie.Seats.Infrastructure.MassTransit.Commands;
+﻿using CqrsMovie.Messages.Commands.Seat;
+using CqrsMovie.Seats.Infrastructure.MassTransit.Commands;
 using CqrsMovie.Seats.Infrastructure.MassTransit.Events;
 using CqrsMovie.Seats.Infrastructure.MongoDb;
+using CqrsMovie.Seats.ReadModel.Services.Abstracts;
+using CqrsMovie.Seats.ReadModel.Services.Concretes;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,13 +33,20 @@ namespace CqrsMovie.Seats.API
 			var serviceBusOptions = new ServiceBusOptions();
 			Configuration.GetSection("MassTransit:RabbitMQ").Bind(serviceBusOptions);
 
+            services.AddScoped<ISeatsService, SeatsService>();
+
 			services.AddMufloneMassTransitWithRabbitMQ(serviceBusOptions, x =>
 			{
 				x.AddConsumer<CreateDailyProgrammingConsumer>();
 				x.AddConsumer<DailyProgrammingCreatedConsumer>();
 
+                x.AddConsumer<StartSeatsSagaConsumer>();
+
 				x.AddConsumer<BookSeatsConsumer>();
 				x.AddConsumer<SeatsBookedConsumer>();
+
+                x.AddConsumer<FreeSeatsConsumer>();
+                x.AddConsumer<SeatsFreedConsumer>();
 
 				x.AddConsumer<ReserveSeatsConsumer>();
 				x.AddConsumer<SeatsReservedConsumer>();
