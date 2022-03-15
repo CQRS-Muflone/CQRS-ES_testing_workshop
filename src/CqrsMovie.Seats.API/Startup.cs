@@ -24,7 +24,7 @@ namespace CqrsMovie.Seats.API
 
 		public void ConfigureServices(IServiceCollection services)
 		{
-            services.AddMvc(option => option.EnableEndpointRouting = false);
+			services.AddMvc(option => option.EnableEndpointRouting = false);
 			services.AddMongoDB(Configuration.GetConnectionString("MongoDB"));
 			services.AddMufloneEventStore(Configuration.GetConnectionString("EventStore"));
 
@@ -32,7 +32,7 @@ namespace CqrsMovie.Seats.API
 			var serviceBusOptions = new ServiceBusOptions();
 			Configuration.GetSection("MassTransit:RabbitMQ").Bind(serviceBusOptions);
 
-            services.AddScoped<ISeatsService, SeatsService>();
+			services.AddScoped<ISeatsService, SeatsService>();
 
 			services.AddMufloneMassTransitWithRabbitMQ(serviceBusOptions, x =>
 			{
@@ -42,24 +42,24 @@ namespace CqrsMovie.Seats.API
 				x.AddConsumer<BookSeatsConsumer>();
 				x.AddConsumer<SeatsBookedConsumer>();
 
-                //x.AddConsumer<StartSeatsSagaConsumer>();
+				//x.AddConsumer<StartSeatsSagaConsumer>();
 				x.AddConsumer<FreeSeatsConsumer>();
-                x.AddConsumer<SeatsFreedConsumer>();
+				x.AddConsumer<SeatsFreedConsumer>();
 
 				x.AddConsumer<ReserveSeatsConsumer>();
 				x.AddConsumer<SeatsReservedConsumer>();
 
-                x.AddConsumer<StartSagaFromSeatsReservedConsumer>();
-                x.AddConsumer<AcceptPaymentConsumer>();
-                x.AddConsumer<PaymentAcceptedConsumer>();
+				x.AddConsumer<StartSagaFromSeatsReservedConsumer>();
+				x.AddConsumer<AcceptPaymentConsumer>();
+				x.AddConsumer<PaymentAcceptedConsumer>();
 
-                x.AddConsumer<SeatsAlreadyFreedConsumer>();
-            });
+				x.AddConsumer<SeatsAlreadyFreedConsumer>();
+			});
 
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "CQRS-ES Workshop", Version = "v1", Description = "Web Api Services for CQRS-ES workshop" });
-            });
+			services.AddSwaggerGen(c =>
+			{
+				c.SwaggerDoc("v1", new OpenApiInfo { Title = "CQRS-ES Workshop", Version = "v1", Description = "Web Api Services for CQRS-ES workshop" });
+			});
 		}
 
 		public void Configure(IApplicationBuilder app, IHostEnvironment env)
@@ -70,25 +70,25 @@ namespace CqrsMovie.Seats.API
 				app.UseHsts();
 
 			app.UseAuthentication();
-            app.UseFileServer();
-            app.UseRouting();
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute(
-                    "default",
-                    "{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapRazorPages();
-            });
+			app.UseFileServer();
+			app.UseRouting();
+			app.UseEndpoints(endpoints =>
+			{
+				endpoints.MapControllerRoute(
+									"default",
+									"{controller=Home}/{action=Index}/{id?}");
+				endpoints.MapRazorPages();
+			});
 
-            app.UseSwagger(c =>
-            {
-                c.RouteTemplate = "documentation/{documentName}/documentation.json";
-                c.SerializeAsV2 = true;
-            });
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/documentation/v1/documentation.json", "CQRS Movie Seats API v1");
-            });
+			app.UseSwagger(c =>
+			{
+				c.RouteTemplate = "documentation/{documentName}/documentation.json";
+				c.SerializeAsV2 = true;
+			});
+			app.UseSwaggerUI(c =>
+			{
+				c.SwaggerEndpoint("/documentation/v1/documentation.json", "CQRS Movie Seats API v1");
+			});
 		}
 	}
 }

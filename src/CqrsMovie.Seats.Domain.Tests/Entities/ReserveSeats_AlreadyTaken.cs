@@ -74,7 +74,7 @@ namespace CqrsMovie.Seats.Domain.Tests.Entities
 
         protected override IEnumerable<DomainEvent> Expect()
         {
-            yield return new SeatsAlreadyTaken(this.aggregateId, this.seatsToReserve);
+            yield return new SeatsAlreadyReserved(this.aggregateId, this.seatsToReserve);
         }
     }
 }

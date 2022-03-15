@@ -19,7 +19,7 @@ namespace CqrsMovie.Seats.Domain.Sagas
         IDomainEventHandler<SeatsReserved>,
         IDomainEventHandler<SeatsBooked>,
         IDomainEventHandler<SeatsFreed>,
-        IDomainEventHandler<SeatsAlreadyFreed>
+        IDomainEventHandler<SeatsAlreadyBooked>
     {
         private readonly IServiceBus serviceBus;
         private readonly ISeatsService seatsService;
@@ -87,7 +87,7 @@ namespace CqrsMovie.Seats.Domain.Sagas
             await ManageCreditCardRefund(@event);
         }
 
-        public Task Handle(SeatsAlreadyFreed @event)
+        public Task Handle(SeatsAlreadyBooked @event)
         {
             if (!@event.Headers.CorrelationId.Equals(CorrelationId))
                 return Task.CompletedTask;

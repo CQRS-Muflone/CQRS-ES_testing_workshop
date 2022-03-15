@@ -6,11 +6,11 @@ using Microsoft.Extensions.Logging;
 
 namespace CqrsMovie.Seats.ReadModel.EventHandlers
 {
-    public class DailyProgrammingCreatedDomainDomainEventHandler : DomainEventHandler<DailyProgrammingCreated>
+    public class DailyProgrammingCreatedDomainEventHandler : DomainEventHandler<DailyProgrammingCreated>
     {
         private readonly ISeatsService seatsService;
 
-        public DailyProgrammingCreatedDomainDomainEventHandler(IPersister persister, ILoggerFactory loggerFactory, ISeatsService seatsService)
+        public DailyProgrammingCreatedDomainEventHandler(IPersister persister, ILoggerFactory loggerFactory, ISeatsService seatsService)
           : base(persister, loggerFactory)
         {
             this.seatsService = seatsService;

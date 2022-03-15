@@ -9,124 +9,129 @@ using Muflone.Core;
 
 namespace CqrsMovie.Seats.Domain.Entities
 {
-    public class DailyProgramming : AggregateRoot
-    {
-        private MovieId movieId;
-        private ScreenId screenId;
-        private DateTime date;
-        private IList<Seat> seats;
+	public class DailyProgramming : AggregateRoot
+	{
+		private MovieId movieId;
+		private ScreenId screenId;
+		private DateTime date;
+		private IList<Seat> seats;
 
-        //TODO: Implement user information (due to online shopping)
-        //private Guid userId;
+		//TODO: Implement user information (due to online shopping)
+		//private Guid userId;
 
-        protected DailyProgramming()
-        { }
+		protected DailyProgramming()
+		{ }
 
-        public static DailyProgramming CreateDailyProgramming(DailyProgrammingId aggregateId, MovieId movieId,
-            ScreenId screenId, DateTime date, IEnumerable<Messages.Dtos.Seat> freeSeats, string movieTitle,
-            string screenName)
-        {
-            return new DailyProgramming(aggregateId, movieId, screenId, date, freeSeats, movieTitle, screenName);
-        }
+		public static DailyProgramming CreateDailyProgramming(DailyProgrammingId aggregateId, MovieId movieId,
+				ScreenId screenId, DateTime date, IEnumerable<Messages.Dtos.Seat> freeSeats, string movieTitle,
+				string screenName)
+		{
+			return new DailyProgramming(aggregateId, movieId, screenId, date, freeSeats, movieTitle, screenName);
+		}
 
-        private DailyProgramming(DailyProgrammingId aggregateId, MovieId movieId, ScreenId screenId, DateTime date,
-            IEnumerable<Messages.Dtos.Seat> freeSeats, string movieTitle, string screenName)
-        {
-            //Null checks etc. ....
+		private DailyProgramming(DailyProgrammingId aggregateId, MovieId movieId, ScreenId screenId, DateTime date,
+				IEnumerable<Messages.Dtos.Seat> freeSeats, string movieTitle, string screenName)
+		{
+			//Null checks etc. ....
 
-            RaiseEvent(new DailyProgrammingCreated(aggregateId, movieId, screenId, date, freeSeats, movieTitle, screenName));
-        }
+			RaiseEvent(new DailyProgrammingCreated(aggregateId, movieId, screenId, date, freeSeats, movieTitle, screenName));
+		}
 
-        private void Apply(DailyProgrammingCreated @event)
-        {
-            Id = @event.AggregateId;
-            movieId = @event.MovieId;
-            screenId = @event.ScreenId;
-            date = @event.Date;
-            seats = @event.Seats.ToEntity(SeatState.Free);
-        }
+		private void Apply(DailyProgrammingCreated @event)
+		{
+			Id = @event.AggregateId;
+			movieId = @event.MovieId;
+			screenId = @event.ScreenId;
+			date = @event.Date;
+			seats = @event.Seats.ToEntity(SeatState.Free);
+		}
 
-        #region BookSeats
-        internal void BookSeats(DailyProgrammingId aggregateId, Guid correlationId, IEnumerable<Messages.Dtos.Seat> seatsToBook)
-        {
-            // Chk for seats availability
-            var seatsToChk = seats.Where(seat => seatsToBook.Any(book => book.ToEntity(SeatState.Reserved).Equals(seat)));
-            if (seatsToChk.Count() != seatsToBook.Count())
-            {
-                RaiseEvent(new SeatsAlreadyFreed(aggregateId, correlationId, seatsToBook));
-                return;
-            }
+		#region BookSeats
+		internal void BookSeats(DailyProgrammingId aggregateId, Guid correlationId, IEnumerable<Messages.Dtos.Seat> seatsToBook)
+		{
+			// Chk for seats availability
+			var seatsToChk = seats.Where(seat => seatsToBook.Any(book => book.ToEntity(SeatState.Reserved).Equals(seat)));
+			if (seatsToChk.Count() != seatsToBook.Count())
+			{
+				RaiseEvent(new SeatsAlreadyBooked(aggregateId, correlationId, seatsToBook));
+				return;
+			}
 
-            // Raise event
-            RaiseEvent(new SeatsBooked(aggregateId, correlationId, seatsToBook));
-        }
+			// Raise event
+			RaiseEvent(new SeatsBooked(aggregateId, correlationId, seatsToBook));
+		}
 
-        private void Apply(SeatsBooked @event)
-        {
-            foreach (var seatBooked in @event.Seats)
-            {
-                var seat = seats.FirstOrDefault(s => s.Equals(seatBooked.ToEntity(SeatState.Reserved)));
-                seats.Remove(seat);
-                seats.Add(new Seat(seat.Row, seat.Number, SeatState.Booked));
-            }
-        }
-        #endregion
+		private void Apply(SeatsBooked @event)
+		{
+			foreach (var seatBooked in @event.Seats)
+			{
+				var seat = seats.FirstOrDefault(s => s.Equals(seatBooked.ToEntity(SeatState.Reserved)));
+				seats.Remove(seat);
+				seats.Add(new Seat(seat.Row, seat.Number, SeatState.Booked));
+			}
+		}
 
-        #region ReserveSeats
-        internal void ReserveSeat(DailyProgrammingId aggregateId, Guid correlationId, IEnumerable<Messages.Dtos.Seat> seatsToReserve)
-        {
-            // Chk for seats availability
-            var seatsToChk = seats.Where(seat => seatsToReserve.Any(book => book.ToEntity(SeatState.Free).Equals(seat)));
-            if (seatsToChk.Count() != seatsToReserve.Count())
-            {
-                RaiseEvent(new SeatsAlreadyTaken(aggregateId, seatsToReserve));
-                return;
-            }
+		private void Apply(SeatsAlreadyBooked @event)
+		{
 
-            RaiseEvent(new SeatsReserved(aggregateId, correlationId, seatsToReserve));
-        }
+		}
+		#endregion
 
-        private void Apply(SeatsReserved @event)
-        {
-            foreach (var seatReserved in @event.Seats)
-            {
-                var seat = seats.FirstOrDefault(s => s.Equals(seatReserved.ToEntity(SeatState.Free)));
-                seats.Remove(seat);
-                seats.Add(new Seat(seat.Row, seat.Number, SeatState.Reserved));
-            }
-        }
+		#region ReserveSeats
+		internal void ReserveSeat(DailyProgrammingId aggregateId, Guid correlationId, IEnumerable<Messages.Dtos.Seat> seatsToReserve)
+		{
+			// Chk for seats availability
+			var seatsToChk = seats.Where(seat => seatsToReserve.Any(book => book.ToEntity(SeatState.Free).Equals(seat)));
+			if (seatsToChk.Count() != seatsToReserve.Count())
+			{
+				RaiseEvent(new SeatsAlreadyReserved(aggregateId, seatsToReserve));
+				return;
+			}
 
-        private void Apply(SeatsAlreadyTaken @event)
-        { }
-        #endregion
+			RaiseEvent(new SeatsReserved(aggregateId, correlationId, seatsToReserve));
+		}
 
-        #region FreeSeats
-        internal void ReleaseSeats(DailyProgrammingId aggregateId, Guid correlationId, IEnumerable<Messages.Dtos.Seat> seatsToRelease)
-        {
-            // Chk ...
+		private void Apply(SeatsReserved @event)
+		{
+			foreach (var seatReserved in @event.Seats)
+			{
+				var seat = seats.FirstOrDefault(s => s.Equals(seatReserved.ToEntity(SeatState.Free)));
+				seats.Remove(seat);
+				seats.Add(new Seat(seat.Row, seat.Number, SeatState.Reserved));
+			}
+		}
 
-            RaiseEvent(new SeatsFreed(aggregateId, correlationId, seatsToRelease));
-        }
+		private void Apply(SeatsAlreadyReserved @event)
+		{ }
+		#endregion
 
-        private void Apply(SeatsFreed @event)
-        {
-            foreach (var seatReserved in @event.Seats)
-            {
-                var seat = seats.FirstOrDefault(s => s.Equals(seatReserved.ToEntity(SeatState.Reserved)));
-                seats.Remove(seat);
-                seats.Add(new Seat(seat.Row, seat.Number, SeatState.Free));
-            }
-        }
-        #endregion
+		#region FreeSeats
+		internal void ReleaseSeats(DailyProgrammingId aggregateId, Guid correlationId, IEnumerable<Messages.Dtos.Seat> seatsToRelease)
+		{
+			// Chk ...
 
-        #region Payment
-        internal void AcceptPayment(DailyProgrammingId aggregateId, Guid correlationId)
-        {
-            RaiseEvent(new PaymentAccepted(aggregateId, correlationId));
-        }
+			RaiseEvent(new SeatsFreed(aggregateId, correlationId, seatsToRelease));
+		}
 
-        private void Apply(PaymentAccepted @event)
-        {}
-        #endregion
-    }
+		private void Apply(SeatsFreed @event)
+		{
+			foreach (var seatReserved in @event.Seats)
+			{
+				var seat = seats.FirstOrDefault(s => s.Equals(seatReserved.ToEntity(SeatState.Reserved)));
+				seats.Remove(seat);
+				seats.Add(new Seat(seat.Row, seat.Number, SeatState.Free));
+			}
+		}
+		#endregion
+
+		#region Payment
+		internal void AcceptPayment(DailyProgrammingId aggregateId, Guid correlationId)
+		{
+			RaiseEvent(new PaymentAccepted(aggregateId, correlationId));
+		}
+
+		private void Apply(PaymentAccepted @event)
+		{ }
+		#endregion
+	}
 }

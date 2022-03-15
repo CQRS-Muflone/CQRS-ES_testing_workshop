@@ -9,21 +9,21 @@ using Muflone.Messages.Events;
 
 namespace CqrsMovie.Seats.Infrastructure.MassTransit.Events
 {
-    public class DailyProgrammingCreatedConsumer : DomainEventConsumer<DailyProgrammingCreated>
-    {
-        private readonly ISeatsService seatsService;
+	public class DailyProgrammingCreatedConsumer : DomainEventConsumer<DailyProgrammingCreated>
+	{
+		private readonly ISeatsService seatsService;
 
-        public DailyProgrammingCreatedConsumer(IPersister persister, ILoggerFactory loggerFactory, ISeatsService seatsService) : base(persister, loggerFactory)
-        {
-            this.seatsService = seatsService;
-        }
+		public DailyProgrammingCreatedConsumer(IPersister persister, ILoggerFactory loggerFactory, ISeatsService seatsService) : base(persister, loggerFactory)
+		{
+			this.seatsService = seatsService;
+		}
 
-        protected override IDomainEventHandler<DailyProgrammingCreated> Handler =>
-            new DailyProgrammingCreatedDomainDomainEventHandler(Persister, LoggerFactory, this.seatsService);
-        public override async Task Consume(ConsumeContext<DailyProgrammingCreated> context)
-        {
-            using var handler = this.Handler;
-            await handler.Handle(context.Message);
-        }
-    }
+		protected override IDomainEventHandler<DailyProgrammingCreated> Handler =>
+				new DailyProgrammingCreatedDomainEventHandler(Persister, LoggerFactory, this.seatsService);
+		public override async Task Consume(ConsumeContext<DailyProgrammingCreated> context)
+		{
+			using var handler = this.Handler;
+			await handler.Handle(context.Message);
+		}
+	}
 }
